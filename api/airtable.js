@@ -1,13 +1,17 @@
-export default async function handler(req, res) {
+export default async function handler(req) {
   try {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
     const BASE_ID = process.env.AIRTABLE_BASE_ID
     const TABLE_NAME = 'Vanguard Sweepstakes'
 
     if (!AIRTABLE_API_KEY || !BASE_ID) {
-      return res.status(500).json({
-        error: 'Missing Airtable environment variables',
-      })
+      return new Response(
+        JSON.stringify({ error: 'Missing Airtable environment variables' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
     }
 
     const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`
@@ -21,17 +25,32 @@ export default async function handler(req, res) {
     const data = await response.json()
 
     if (!response.ok) {
-      return res.status(response.status).json({
-        error: 'Airtable API error',
-        details: data,
-      })
+      return new Response(
+        JSON.stringify({
+          error: 'Airtable API error',
+          details: data,
+        }),
+        {
+          status: response.status,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      )
     }
 
-    return res.status(200).json(data)
-  } catch (err) {
-    return res.status(500).json({
-      error: 'Server crash',
-      message: err.message,
+    return new Response(JSON.stringify(data), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
     })
+  } catch (err) {
+    return new Response(
+      JSON.stringify({
+        error: 'Server crash',
+        message: err.message,
+      }),
+      {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    )
   }
 }
