@@ -2,7 +2,7 @@ export default async function handler(req, res) {
   try {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
     const BASE_ID = process.env.AIRTABLE_BASE_ID
-    const TABLE_NAME = 'Vanguard Sweepstakes'
+    const TABLE_NAME = 'tblUtq9WqezZWWnVZ'
 
     if (!AIRTABLE_API_KEY || !BASE_ID) {
       return res.status(500).json({
