@@ -2,7 +2,7 @@ export default async function handler(req) {
   try {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
     const BASE_ID = process.env.AIRTABLE_BASE_ID
-    const TABLE_NAME = 'Your Actual Table Name'
+    const TABLE_NAME = 'Vanguard Sweepstakes'
 
     if (!AIRTABLE_API_KEY || !BASE_ID) {
       return new Response(
