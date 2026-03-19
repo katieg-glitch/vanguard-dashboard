@@ -1,23 +1,25 @@
 export default async function handler(req, res) {
   try {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
-    const BASE_ID = process.env.AIRTABLE_BASE_ID
+    const BASE_ID = 'app4bcZHXtQ7OvxDB'
+    const TABLE_NAME = 'Vanguard Sweepstakes'
+    const VIEW_NAME = 'Grid view'
 
-    const response = await fetch(
-      `https://api.airtable.com/v0/meta/bases/${BASE_ID}/tables`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-        },
-      }
-    )
+    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?view=${encodeURIComponent(VIEW_NAME)}`
+
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+      },
+    })
 
     const data = await response.json()
 
     return res.status(200).json({
-      metaStatus: response.status,
-      metaOk: response.ok,
-      metaData: data,
+      requestUrl: url,
+      airtableStatus: response.status,
+      airtableOk: response.ok,
+      airtableData: data,
     })
   } catch (err) {
     return res.status(500).json({
