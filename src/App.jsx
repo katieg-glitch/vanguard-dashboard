@@ -301,8 +301,8 @@ export default function App() {
 
       <div style={styles.container}>
         <header style={styles.hero}>
-          <div style={styles.badge}>2026 SEASON</div>
-          <h1 style={styles.title}>Vanguard Power Sweepstakes</h1>
+<div style={styles.badge}>APP JSX LIVE TEST</div>
+<h1 style={styles.title}>Vanguard Power Sweepstakes - NEW BUILD</h1>
           <p style={styles.subtitle}>
             Live leaderboard for Ferris, Wright, and Scag Vanguard engine sales.
           </p>
