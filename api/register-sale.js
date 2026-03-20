@@ -4,9 +4,9 @@ export default async function handler(req, res) {
   }
 
   try {
-    const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
-    const BASE_ID = process.env.AIRTABLE_BASE_ID
-    const TABLE_ID = process.env.AIRTABLE_TABLE_ID
+const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
+const BASE_ID = process.env.AIRTABLE_BASE_ID
+const TABLE_ID = process.env.AIRTABLE_TABLE_ID
 
     if (!AIRTABLE_API_KEY || !BASE_ID || !TABLE_ID) {
       return res.status(500).json({
