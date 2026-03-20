@@ -46,10 +46,9 @@ export default async function handler(req, res) {
         'Brand': brand || '',
         'Date Sold': dateSold || '',
         'Serial #': serialNumber || '',
-        'Contest Salesperson': salespersonName || '',
-        'Contest Brand': brand || '',
         'Submission Source': 'App',
       },
+      typecast: true,
     }
 
     const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}`
