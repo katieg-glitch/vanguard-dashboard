@@ -34,26 +34,53 @@ const DEMO_SCOREBOARD = [
 // Aggregate Airtable records into scoreboard format
 function aggregateScoreboard(records) {
   const map = {}
+
   records.forEach((r) => {
     const fields = r.fields || {}
-    const name = (fields['Salesperson Name'] || 'Unknown').trim()
+
+    const name = String(
+      fields['Contest Salesperson'] ||
+      fields['Salesperson Name'] ||
+      'Unknown'
+    ).trim()
+
+    const dealer = String(
+      fields['Dealer Name'] || ''
+    ).trim()
+
+    const brand = String(
+      fields['Contest Brand'] ||
+      fields['Brand'] ||
+      ''
+    ).trim().toLowerCase()
+
     const key = name.toLowerCase()
+
     if (!map[key]) {
       map[key] = {
         salesperson: name,
-        dealer: fields['Dealer Name'] || '',
+        dealer,
         ferris: 0,
         scag: 0,
         wright: 0,
         total: 0,
       }
     }
-    const brand = (fields['Brand'] || '').toLowerCase()
-    if (brand === 'ferris') map[key].ferris++
-    else if (brand === 'scag') map[key].scag++
-    else if (brand === 'wright') map[key].wright++
-    map[key].total = map[key].ferris + map[key].scag + map[key].wright
+
+    if (brand === 'ferris') {
+      map[key].ferris += 1
+    } else if (brand === 'scag') {
+      map[key].scag += 1
+    } else if (brand === 'wright') {
+      map[key].wright += 1
+    }
+
+    map[key].total =
+      map[key].ferris +
+      map[key].scag +
+      map[key].wright
   })
+
   return Object.values(map).sort((a, b) => b.total - a.total)
 }
 
@@ -209,51 +236,45 @@ export default function App() {
   const fileRef = useRef(null)
 
   // Fetch scoreboard data
-  const refreshScoreboard = useCallback(async (showRefresh = false) => {
-    if (showRefresh) setLoading(true)
-    setError('')
-    
-    try {
-      const res = await fetch('/api/airtable')
-      const contentType = res.headers.get('content-type')
-      
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Server returned non-JSON response')
-      }
+ const refreshScoreboard = useCallback(async (showRefresh = false) => {
+  if (showRefresh) setLoading(true)
+  setError('')
 
-      const result = await res.json()
+  try {
+    const res = await fetch('/api/airtable')
+    const contentType = res.headers.get('content-type')
 
-      if (!res.ok || !result.airtableOk) {
-        throw new Error(result?.error || result?.airtableData?.error?.message || 'Could not load data')
-      }
-
-      const records = result.airtableData?.records
-      if (Array.isArray(records) && records.length > 0) {
-        const aggregated = aggregateScoreboard(records)
-        if (aggregated.length >= 3) {
-          setScoreboard(aggregated)
-          setUseDemo(false)
-        } else {
-          setScoreboard(DEMO_SCOREBOARD)
-          setUseDemo(true)
-        }
-      } else {
-        setScoreboard(DEMO_SCOREBOARD)
-        setUseDemo(true)
-      }
-      setLastRefresh(new Date())
-    } catch (err) {
-      console.error('Failed to fetch scoreboard:', err)
-      setScoreboard(DEMO_SCOREBOARD)
-      setUseDemo(true)
-      setError(err.message)
+    if (!contentType || !contentType.includes('application/json')) {
+      throw new Error('Server returned non-JSON response')
     }
-    setLoading(false)
-  }, [])
 
-  useEffect(() => {
-    refreshScoreboard()
-  }, [refreshScoreboard])
+    const result = await res.json()
+
+    if (!res.ok || !result.airtableOk) {
+      throw new Error(result?.error || result?.airtableData?.error?.message || 'Could not load data')
+    }
+
+    const records = result.airtableData?.records
+
+    if (Array.isArray(records) && records.length > 0) {
+      const aggregated = aggregateScoreboard(records)
+      setScoreboard(aggregated)
+      setUseDemo(false)
+    } else {
+      setScoreboard([])
+      setUseDemo(false)
+    }
+
+    setLastRefresh(new Date())
+  } catch (err) {
+    console.error('Failed to fetch scoreboard:', err)
+    setScoreboard([])
+    setUseDemo(false)
+    setError(err.message || 'Failed to load scoreboard')
+  }
+
+  setLoading(false)
+}, [])
 
   // Form handlers
   const addEntry = () => {
