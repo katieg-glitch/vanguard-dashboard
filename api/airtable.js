@@ -2,9 +2,9 @@ export default async function handler(req, res) {
   try {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
     const BASE_ID = process.env.AIRTABLE_BASE_ID
-    const TABLE_NAME = 'Vanguard Sweepstakes'
+    const TABLE_ID = process.env.AIRTABLE_TABLE_ID
 
-    if (!AIRTABLE_API_KEY || !BASE_ID) {
+    if (!AIRTABLE_API_KEY || !BASE_ID || !TABLE_ID) {
       return res.status(500).json({
         error: 'Missing Airtable credentials in environment variables',
         airtableOk: false,
@@ -21,7 +21,7 @@ export default async function handler(req, res) {
 
       if (offset) params.append('offset', offset)
 
-      const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?${params.toString()}`
+      const url = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_ID}?${params.toString()}`
 
       const response = await fetch(url, {
         headers: {
@@ -48,9 +48,7 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       airtableOk: true,
-      airtableData: {
-        records,
-      },
+      airtableData: { records },
     })
   } catch (err) {
     return res.status(500).json({
