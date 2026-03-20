@@ -3,7 +3,6 @@ export default async function handler(req, res) {
     const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
     const BASE_ID = process.env.AIRTABLE_BASE_ID
     const TABLE_NAME = 'Vanguard Sweepstakes'
-    const VIEW_NAME = 'Grid view'
 
     if (!AIRTABLE_API_KEY || !BASE_ID) {
       return res.status(500).json({
@@ -17,7 +16,6 @@ export default async function handler(req, res) {
 
     do {
       const params = new URLSearchParams({
-        view: VIEW_NAME,
         pageSize: '100',
       })
 
