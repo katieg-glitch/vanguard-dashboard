@@ -12,20 +12,47 @@ export default async function handler(req, res) {
       })
     }
 
-    const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?view=${encodeURIComponent(VIEW_NAME)}`
+    const records = []
+    let offset = null
 
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_API_KEY}`,
-      },
-    })
+    do {
+      const params = new URLSearchParams({
+        view: VIEW_NAME,
+        pageSize: '100',
+      })
 
-    const data = await response.json()
+      if (offset) params.append('offset', offset)
+
+      const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?${params.toString()}`
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_API_KEY}`,
+        },
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        return res.status(response.status).json({
+          airtableOk: false,
+          error: data?.error?.message || 'Failed to fetch Airtable records',
+          airtableData: data,
+        })
+      }
+
+      if (Array.isArray(data.records)) {
+        records.push(...data.records)
+      }
+
+      offset = data.offset || null
+    } while (offset)
 
     return res.status(200).json({
-      airtableStatus: response.status,
-      airtableOk: response.ok,
-      airtableData: data,
+      airtableOk: true,
+      airtableData: {
+        records,
+      },
     })
   } catch (err) {
     return res.status(500).json({
