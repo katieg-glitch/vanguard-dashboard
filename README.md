@@ -1,2 +1,3 @@
 # vanguard-dashboard
 vanguard-dashboard
+.
