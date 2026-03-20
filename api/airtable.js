@@ -5,6 +5,13 @@ export default async function handler(req, res) {
     const TABLE_NAME = 'Vanguard Sweepstakes'
     const VIEW_NAME = 'Grid view'
 
+    if (!AIRTABLE_API_KEY || !BASE_ID) {
+      return res.status(500).json({
+        error: 'Missing Airtable credentials in environment variables',
+        airtableOk: false,
+      })
+    }
+
     const url = `https://api.airtable.com/v0/${BASE_ID}/${encodeURIComponent(TABLE_NAME)}?view=${encodeURIComponent(VIEW_NAME)}`
 
     const response = await fetch(url, {
@@ -22,8 +29,9 @@ export default async function handler(req, res) {
     })
   } catch (err) {
     return res.status(500).json({
-      error: 'Server crash',
+      error: 'Server error connecting to Airtable',
       message: err.message,
+      airtableOk: false,
     })
   }
 }
