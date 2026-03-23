@@ -24,7 +24,7 @@ function aggregateScoreboard(records) {
     const fields = r.fields || {}
 
     const displayName = String(
-      fields['Contest Salesperson'] ||
+      fields['Contest Salesperson Name'] ||
       fields['Salesperson Name'] ||
       ''
     ).trim()
