@@ -23,9 +23,7 @@ function aggregateScoreboard(records) {
     const fields = r.fields || {}
 
     const name = String(
-      fields['Contest Salesperson'] ||
-      fields['Salesperson Name'] ||
-      'Unknown'
+      fields['Contest Salesperson'] || ''
     ).trim()
 
     const dealer = String(
@@ -37,6 +35,8 @@ function aggregateScoreboard(records) {
       fields['Brand'] ||
       ''
     ).trim().toLowerCase()
+
+    if (!name) return
 
     const key = name.toLowerCase()
 
