@@ -1084,19 +1084,24 @@ export default function App() {
           </div>
         )}
 
-<footer className="text-center py-8 border-t border-zinc-800 mt-8">
-  <div className="flex justify-center mb-3">
-    <a
-      href="https://www.pacelink.com"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      <img
-        src={paceLogo}
-        alt="Pace"
-        className="h-12 md:h-14 w-auto"
-      />
-    </a>
-  </div>
-  <div className="text-xs text-zinc-500">2026 Vanguard Power Sweepstakes — Powered by Pace</div>
-</footer>
+        
+        <footer className="text-center py-8 border-t border-zinc-800 mt-8">
+          <div className="flex justify-center mb-3">
+            <a
+              href="https://www.pacelink.com"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <img
+                src={paceLogo}
+                alt="Pace"
+                className="h-12 md:h-14 w-auto"
+              />
+            </a>
+          </div>
+          <div className="text-xs text-zinc-500">2026 Vanguard Power Sweepstakes — Powered by Pace</div>
+        </footer>
+      </div>
+    </div>
+  )
+}
