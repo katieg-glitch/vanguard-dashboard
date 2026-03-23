@@ -246,41 +246,56 @@ export default function App() {
       const records = result.airtableData?.records
 
       if (Array.isArray(records) && records.length > 0) {
-        const aggregated = aggregateScoreboard(records)
-        setScoreboard(aggregated)
-      } else {
-        setScoreboard([])
+        function aggregateScoreboard(records) {
+  const map = {}
+
+  records.forEach((r) => {
+    const fields = r.fields || {}
+
+    const displayName = String(
+      fields['Contest Salesperson'] ||
+      fields['Salesperson Name'] ||
+      ''
+    ).trim()
+
+    const dealer = String(
+      fields['Dealer Name'] || ''
+    ).trim()
+
+    const brand = String(
+      fields['Contest Brand'] ||
+      fields['Brand'] ||
+      ''
+    ).trim().toLowerCase()
+
+    if (!displayName) return
+
+    const key = displayName.toLowerCase()
+
+    if (!map[key]) {
+      map[key] = {
+        salesperson: displayName,
+        dealer,
+        ferris: 0,
+        scag: 0,
+        wright: 0,
+        total: 0,
       }
-
-      setUseDemo(false)
-      setLastRefresh(new Date())
-    } catch (err) {
-      console.error('Failed to fetch scoreboard:', err)
-      setScoreboard([])
-      setUseDemo(false)
-      setError(err.message || 'Failed to load scoreboard')
-    } finally {
-      setLoading(false)
     }
-  }, [])
 
-  useEffect(() => {
-    refreshScoreboard()
-  }, [refreshScoreboard])
+    if (brand === 'ferris') {
+      map[key].ferris += 1
+    } else if (brand === 'scag') {
+      map[key].scag += 1
+    } else if (brand === 'wright') {
+      map[key].wright += 1
+    }
 
-  const addEntry = () => {
-    setFormData((p) => ({
-      ...p,
-      entries: [...p.entries, { dateSold: '', serialNumber: '' }],
-    }))
-  }
+    map[key].total = map[key].ferris + map[key].scag + map[key].wright
+  })
 
-  const removeEntry = (i) => {
-    setFormData((p) => ({
-      ...p,
-      entries: p.entries.filter((_, idx) => idx !== i),
-    }))
-  }
+  return Object.values(map).sort((a, b) => b.total - a.total)
+}
 
   const updateEntry = (i, field, val) => {
     setFormData((p) => {
