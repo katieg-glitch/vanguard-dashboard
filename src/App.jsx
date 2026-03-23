@@ -14,6 +14,7 @@ import {
 } from 'lucide-react'
 import logo from '../Vanguard-logo.png'
 import paceLogo from '../Pace Logo White 2023.png'
+
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
 function aggregateScoreboard(records) {
@@ -22,13 +23,13 @@ function aggregateScoreboard(records) {
   records.forEach((r) => {
     const fields = r.fields || {}
 
-    const name = String(
-      fields['Contest Salesperson'] || ''
+    const displayName = String(
+      fields['Contest Salesperson'] ||
+      fields['Salesperson Name'] ||
+      ''
     ).trim()
 
-    const dealer = String(
-      fields['Dealer Name'] || ''
-    ).trim()
+    const dealer = String(fields['Dealer Name'] || '').trim()
 
     const brand = String(
       fields['Contest Brand'] ||
@@ -36,13 +37,13 @@ function aggregateScoreboard(records) {
       ''
     ).trim().toLowerCase()
 
-    if (!name) return
+    if (!displayName) return
 
-    const key = name.toLowerCase()
+    const key = displayName.toLowerCase()
 
     if (!map[key]) {
       map[key] = {
-        salesperson: name,
+        salesperson: displayName,
         dealer,
         ferris: 0,
         scag: 0,
@@ -246,56 +247,41 @@ export default function App() {
       const records = result.airtableData?.records
 
       if (Array.isArray(records) && records.length > 0) {
-        function aggregateScoreboard(records) {
-  const map = {}
-
-  records.forEach((r) => {
-    const fields = r.fields || {}
-
-    const displayName = String(
-      fields['Contest Salesperson'] ||
-      fields['Salesperson Name'] ||
-      ''
-    ).trim()
-
-    const dealer = String(
-      fields['Dealer Name'] || ''
-    ).trim()
-
-    const brand = String(
-      fields['Contest Brand'] ||
-      fields['Brand'] ||
-      ''
-    ).trim().toLowerCase()
-
-    if (!displayName) return
-
-    const key = displayName.toLowerCase()
-
-    if (!map[key]) {
-      map[key] = {
-        salesperson: displayName,
-        dealer,
-        ferris: 0,
-        scag: 0,
-        wright: 0,
-        total: 0,
+        const aggregated = aggregateScoreboard(records)
+        setScoreboard(aggregated)
+      } else {
+        setScoreboard([])
       }
+
+      setUseDemo(false)
+      setLastRefresh(new Date())
+    } catch (err) {
+      console.error('Failed to fetch scoreboard:', err)
+      setScoreboard([])
+      setUseDemo(false)
+      setError(err.message || 'Failed to load scoreboard')
+    } finally {
+      setLoading(false)
     }
+  }, [])
 
-    if (brand === 'ferris') {
-      map[key].ferris += 1
-    } else if (brand === 'scag') {
-      map[key].scag += 1
-    } else if (brand === 'wright') {
-      map[key].wright += 1
-    }
+  useEffect(() => {
+    refreshScoreboard()
+  }, [refreshScoreboard])
 
-    map[key].total = map[key].ferris + map[key].scag + map[key].wright
-  })
+  const addEntry = () => {
+    setFormData((p) => ({
+      ...p,
+      entries: [...p.entries, { dateSold: '', serialNumber: '' }],
+    }))
+  }
 
-  return Object.values(map).sort((a, b) => b.total - a.total)
-}
+  const removeEntry = (i) => {
+    setFormData((p) => ({
+      ...p,
+      entries: p.entries.filter((_, idx) => idx !== i),
+    }))
+  }
 
   const updateEntry = (i, field, val) => {
     setFormData((p) => {
@@ -367,46 +353,46 @@ export default function App() {
     }
   }
 
-const handleFileSelect = (e) => {
-  const file = e.target.files?.[0]
-  if (!file) return
+  const handleFileSelect = (e) => {
+    const file = e.target.files?.[0]
+    if (!file) return
 
-  setCsvFileName(file.name)
-  setUploadResult(null)
+    setCsvFileName(file.name)
+    setUploadResult(null)
 
-  const reader = new FileReader()
-  reader.onload = (ev) => setCsvData(parseCSV(ev.target.result))
-  reader.readAsText(file)
-}
+    const reader = new FileReader()
+    reader.onload = (ev) => setCsvData(parseCSV(ev.target.result))
+    reader.readAsText(file)
+  }
 
-const downloadCsvTemplate = () => {
-  const headers = [
-    'Dealer #',
-    'Dealer Name',
-    'Salesperson Name',
-    'Email',
-    'Brand',
-    'Date Sold',
-    'Serial Number',
-  ]
+  const downloadCsvTemplate = () => {
+    const headers = [
+      'Dealer #',
+      'Dealer Name',
+      'Salesperson Name',
+      'Email',
+      'Brand',
+      'Date Sold',
+      'Serial Number',
+    ]
 
-  const csvContent = `${headers.join(',')}\n`
+    const csvContent = `${headers.join(',')}\n`
 
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
-  const url = window.URL.createObjectURL(blob)
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+    const url = window.URL.createObjectURL(blob)
 
-  const link = document.createElement('a')
-  link.href = url
-  link.setAttribute('download', 'vanguard-sweepstakes-import-template.csv')
-  document.body.appendChild(link)
-  link.click()
-  document.body.removeChild(link)
+    const link = document.createElement('a')
+    link.href = url
+    link.setAttribute('download', 'vanguard-sweepstakes-import-template.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
 
-  window.URL.revokeObjectURL(url)
-}
+    window.URL.revokeObjectURL(url)
+  }
 
-const handleBulkUpload = async () => {
-  if (!csvData.length) return
+  const handleBulkUpload = async () => {
+    if (!csvData.length) return
 
     setUploading(true)
 
@@ -467,32 +453,32 @@ const handleBulkUpload = async () => {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(234,179,8,0.04),transparent_50%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
-<header className="pt-8 pb-6 text-center">
-  <div className="flex justify-center mb-4">
-    <img
-      src={logo}
-      alt="Vanguard Sweepstakes"
-      className="h-16 md:h-20 w-auto"
-    />
-  </div>
+        <header className="pt-8 pb-6 text-center">
+          <div className="flex justify-center mb-4">
+            <img
+              src={logo}
+              alt="Vanguard Sweepstakes"
+              className="h-16 md:h-20 w-auto"
+            />
+          </div>
 
-  <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
-    <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
-    <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
-  </div>
+          <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
+            <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
+            <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
+          </div>
 
-  <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-    Vanguard Power Sweepstakes
-  </h1>
+          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+            Vanguard Power Sweepstakes
+          </h1>
 
-  <p className="text-zinc-400 mt-2">Sell Vanguard-powered Ferris, Scag & Wright — win big.</p>
+          <p className="text-zinc-400 mt-2">Sell Vanguard-powered Ferris, Scag & Wright — win big.</p>
 
-  {useDemo && (
-    <Badge variant="outline" className="mt-3">
-      Demo Mode
-    </Badge>
-  )}
-</header>
+          {useDemo && (
+            <Badge variant="outline" className="mt-3">
+              Demo Mode
+            </Badge>
+          )}
+        </header>
 
         <nav className="flex justify-center gap-2 mb-8 flex-wrap">
           <TabButton active={tab === 'scoreboard'} onClick={() => setTab('scoreboard')} icon={<Trophy className="w-4 h-4" />}>
@@ -889,23 +875,24 @@ const handleBulkUpload = async () => {
         {tab === 'upload' && (
           <div className="max-w-2xl mx-auto animate-fade-up pb-12">
             <Card>
-<div className="p-6 border-b border-zinc-800">
-  <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
-  <p className="text-sm text-zinc-500 mb-4">Upload a CSV of existing qualified records to push them in batch.</p>
+              <div className="p-6 border-b border-zinc-800">
+                <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
+                <p className="text-sm text-zinc-500 mb-4">Upload a CSV of existing qualified records to push them in batch.</p>
 
-  <button
-    type="button"
-    onClick={downloadCsvTemplate}
-    className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
-  >
-    Download CSV Template
-  </button>
-</div>
+                <button
+                  type="button"
+                  onClick={downloadCsvTemplate}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
+                >
+                  Download CSV Template
+                </button>
+              </div>
+
               <div className="p-6 space-y-6">
                 <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
                   <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Expected CSV Columns</div>
                   <div className="flex flex-wrap gap-2">
-                    {['Dealer Name', 'Dealer #', 'Salesperson Name', 'Email', 'Brand', 'Date Sold', 'Serial Number'].map((col) => (
+                    {['Dealer #', 'Dealer Name', 'Salesperson Name', 'Email', 'Brand', 'Date Sold', 'Serial Number'].map((col) => (
                       <Badge key={col} variant="outline" className="text-xs">
                         {col}
                       </Badge>
@@ -1132,7 +1119,6 @@ const handleBulkUpload = async () => {
           </div>
         )}
 
-        
         <footer className="text-center py-8 border-t border-zinc-800 mt-8">
           <div className="flex justify-center mb-3">
             <a
@@ -1143,7 +1129,7 @@ const handleBulkUpload = async () => {
               <img
                 src={paceLogo}
                 alt="Pace"
-                className="h-16 md:h-18 w-auto"
+                className="h-16 md:h-20 w-auto"
               />
             </a>
           </div>
