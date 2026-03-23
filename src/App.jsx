@@ -1095,7 +1095,7 @@ export default function App() {
               <img
                 src={paceLogo}
                 alt="Pace"
-                className="h-12 md:h-14 w-auto"
+                className="h-16 md:h-18 w-auto"
               />
             </a>
           </div>
