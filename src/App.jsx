@@ -13,7 +13,7 @@ import {
   Medal,
 } from 'lucide-react'
 import logo from '../Vanguard-logo.png'
-
+import paceLogo from '../Pace Logo White 2023.png'
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
 function aggregateScoreboard(records) {
@@ -1084,9 +1084,16 @@ export default function App() {
           </div>
         )}
 
-        <footer className="text-center py-8 border-t border-zinc-800 mt-8">
-          <div className="text-xs text-zinc-500">2026 Vanguard Power Sweepstakes — Powered by Pace</div>
-        </footer>
+<footer className="text-center py-8 border-t border-zinc-800 mt-8">
+  <div className="flex justify-center mb-3">
+    <img
+      src={paceLogo}
+      alt="Pace"
+      className="h-8 md:h-10 w-auto"
+    />
+  </div>
+  <div className="text-xs text-zinc-500">2026 Vanguard Power Sweepstakes — Powered by Pace</div>
+</footer>
       </div>
     </div>
   )
