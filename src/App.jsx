@@ -426,6 +426,16 @@ export default function App() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
         <header className="pt-8 pb-6 text-center">
+  <div className="flex justify-center mb-4">
+    <img
+      src="/Vanguard%20New%20Logo@2x.png"
+      alt="Vanguard Sweepstakes"
+      className="h-16 md:h-20 w-auto"
+    />
+  </div>
+
+  <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
+          
           <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
             <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
             <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
