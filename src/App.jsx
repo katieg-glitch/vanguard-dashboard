@@ -366,8 +366,8 @@ const handleFileSelect = (e) => {
 
 const downloadCsvTemplate = () => {
   const headers = [
-    'Dealer Name',
     'Dealer #',
+    'Dealer Name',
     'Salesperson Name',
     'Email',
     'Brand',
@@ -375,19 +375,7 @@ const downloadCsvTemplate = () => {
     'Serial Number',
   ]
 
-  const sampleRow = [
-    'ProCut Equipment',
-    'D-10423',
-    'Jane Smith',
-    'jane@dealer.com',
-    'Ferris',
-    '2026-01-15',
-    'VG-2026-12345',
-  ]
-
-  const csvContent = [headers, sampleRow]
-    .map((row) => row.join(','))
-    .join('\n')
+  const csvContent = `${headers.join(',')}\n`
 
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   const url = window.URL.createObjectURL(blob)
