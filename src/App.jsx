@@ -352,20 +352,58 @@ export default function App() {
     }
   }
 
-  const handleFileSelect = (e) => {
-    const file = e.target.files?.[0]
-    if (!file) return
+const handleFileSelect = (e) => {
+  const file = e.target.files?.[0]
+  if (!file) return
 
-    setCsvFileName(file.name)
-    setUploadResult(null)
+  setCsvFileName(file.name)
+  setUploadResult(null)
 
-    const reader = new FileReader()
-    reader.onload = (ev) => setCsvData(parseCSV(ev.target.result))
-    reader.readAsText(file)
-  }
+  const reader = new FileReader()
+  reader.onload = (ev) => setCsvData(parseCSV(ev.target.result))
+  reader.readAsText(file)
+}
 
-  const handleBulkUpload = async () => {
-    if (!csvData.length) return
+const downloadCsvTemplate = () => {
+  const headers = [
+    'Dealer Name',
+    'Dealer #',
+    'Salesperson Name',
+    'Email',
+    'Brand',
+    'Date Sold',
+    'Serial Number',
+  ]
+
+  const sampleRow = [
+    'ProCut Equipment',
+    'D-10423',
+    'Jane Smith',
+    'jane@dealer.com',
+    'Ferris',
+    '2026-01-15',
+    'VG-2026-12345',
+  ]
+
+  const csvContent = [headers, sampleRow]
+    .map((row) => row.join(','))
+    .join('\n')
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = window.URL.createObjectURL(blob)
+
+  const link = document.createElement('a')
+  link.href = url
+  link.setAttribute('download', 'vanguard-sweepstakes-import-template.csv')
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+
+  window.URL.revokeObjectURL(url)
+}
+
+const handleBulkUpload = async () => {
+  if (!csvData.length) return
 
     setUploading(true)
 
