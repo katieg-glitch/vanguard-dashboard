@@ -426,31 +426,32 @@ export default function App() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(234,179,8,0.04),transparent_50%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
-        <header className="pt-8 pb-6 text-center">
-<div className="flex justify-center mb-4">
-  <img
-    src={logo}
-    alt="Vanguard Sweepstakes"
-    className="h-16 md:h-20 w-auto"
-  />
-</div>
+<header className="pt-8 pb-6 text-center">
+  <div className="flex justify-center mb-4">
+    <img
+      src={logo}
+      alt="Vanguard Sweepstakes"
+      className="h-16 md:h-20 w-auto"
+    />
+  </div>
 
   <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
-          
-          <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
-            <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
-            <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
-          </div>
-          <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-            Vanguard Power Sweepstakes
-          </h1>
-          <p className="text-zinc-400 mt-2">Sell Vanguard-powered Ferris, Scag & Wright — win big.</p>
-          {useDemo && (
-            <Badge variant="outline" className="mt-3">
-              Demo Mode
-            </Badge>
-          )}
-        </header>
+    <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
+    <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
+  </div>
+
+  <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+    Vanguard Power Sweepstakes
+  </h1>
+
+  <p className="text-zinc-400 mt-2">Sell Vanguard-powered Ferris, Scag & Wright — win big.</p>
+
+  {useDemo && (
+    <Badge variant="outline" className="mt-3">
+      Demo Mode
+    </Badge>
+  )}
+</header>
 
         <nav className="flex justify-center gap-2 mb-8 flex-wrap">
           <TabButton active={tab === 'scoreboard'} onClick={() => setTab('scoreboard')} icon={<Trophy className="w-4 h-4" />}>
