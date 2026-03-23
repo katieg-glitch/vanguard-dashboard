@@ -1052,8 +1052,7 @@ export default function App() {
               <h3 className="text-lg font-bold mb-4">Eligibility & Verification</h3>
               <p className="text-zinc-400 text-sm mb-4">
                 Open to dealership sales professionals selling Vanguard-powered Ferris, Scag, and Wright units.
-                Minimum of 5 units sold to qualify for the sweepstakes drawing. Sales must be verified through
-                completed SPIFF forms.
+                Minimum of 5 units sold to qualify for the sweepstakes drawing.
               </p>
               <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-lg p-4">
                 <p className="text-xs text-yellow-500/80">
