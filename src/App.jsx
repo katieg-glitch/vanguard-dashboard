@@ -173,17 +173,6 @@ function Badge({ children, variant = 'default', className = '' }) {
   )
 }
 
-function Progress({ value, className = '' }) {
-  return (
-    <div className={`h-2 bg-zinc-800 rounded-full overflow-hidden ${className}`}>
-      <div
-        className="h-full bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-full transition-all duration-300"
-        style={{ width: `${value}%` }}
-      />
-    </div>
-  )
-}
-
 function Skeleton({ className = '' }) {
   return <div className={`bg-zinc-800 animate-pulse rounded ${className}`} />
 }
@@ -441,15 +430,21 @@ export default function App() {
     }
   }
 
-  const overallTop3 = useMemo(() => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3), [scoreboard])
+  const overallTop3 = useMemo(
+    () => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+    [scoreboard]
+  )
+
   const ferrisTop10 = useMemo(
     () => [...scoreboard].filter((r) => r.ferris > 0).sort((a, b) => b.ferris - a.ferris).slice(0, 10),
     [scoreboard]
   )
+
   const wrightTop10 = useMemo(
     () => [...scoreboard].filter((r) => r.wright > 0).sort((a, b) => b.wright - a.wright).slice(0, 10),
     [scoreboard]
   )
+
   const scagTop10 = useMemo(
     () => [...scoreboard].filter((r) => r.scag > 0).sort((a, b) => b.scag - a.scag).slice(0, 10),
     [scoreboard]
@@ -460,7 +455,7 @@ export default function App() {
   const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden bg-black text-white">
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_top_right,rgba(234,179,8,0.08),transparent_50%)] pointer-events-none" />
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(234,179,8,0.04),transparent_50%)] pointer-events-none" />
 
@@ -483,7 +478,9 @@ export default function App() {
             Vanguard Power Sweepstakes
           </h1>
 
-          <p className="text-zinc-400 mt-2">Sell Vanguard-powered Ferris, Scag & Wright — win big.</p>
+          <p className="text-zinc-400 mt-2">
+            Sell Vanguard-powered Ferris, Scag & Wright — win big.
+          </p>
 
           {useDemo && (
             <Badge variant="outline" className="mt-3">
@@ -493,16 +490,35 @@ export default function App() {
         </header>
 
         <nav className="flex justify-center gap-2 mb-8 flex-wrap">
-          <TabButton active={tab === 'scoreboard'} onClick={() => setTab('scoreboard')} icon={<Trophy className="w-4 h-4" />}>
+          <TabButton
+            active={tab === 'scoreboard'}
+            onClick={() => setTab('scoreboard')}
+            icon={<Trophy className="w-4 h-4" />}
+          >
             Scoreboard
           </TabButton>
-          <TabButton active={tab === 'register'} onClick={() => setTab('register')} icon={<Plus className="w-4 h-4" />}>
+
+          <TabButton
+            active={tab === 'register'}
+            onClick={() => setTab('register')}
+            icon={<Plus className="w-4 h-4" />}
+          >
             Register Sales
           </TabButton>
-          <TabButton active={tab === 'upload'} onClick={() => setTab('upload')} icon={<Upload className="w-4 h-4" />}>
+
+          <TabButton
+            active={tab === 'upload'}
+            onClick={() => setTab('upload')}
+            icon={<Upload className="w-4 h-4" />}
+          >
             Bulk Import
           </TabButton>
-          <TabButton active={tab === 'prizes'} onClick={() => setTab('prizes')} icon={<Award className="w-4 h-4" />}>
+
+          <TabButton
+            active={tab === 'prizes'}
+            onClick={() => setTab('prizes')}
+            icon={<Award className="w-4 h-4" />}
+          >
             Rewards & Rules
           </TabButton>
         </nav>
@@ -511,23 +527,34 @@ export default function App() {
           <div className="space-y-8 animate-fade-up pb-12">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Card className="p-6">
-                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Sales Reps Ranked</div>
+                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+                  Sales Reps Ranked
+                </div>
                 <div className="text-3xl font-extrabold text-yellow-500">{rankedReps}</div>
               </Card>
+
               <Card className="p-6">
-                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Qualified Reps</div>
+                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+                  Qualified Reps
+                </div>
                 <div className="text-3xl font-extrabold text-green-500">{qualifiedReps}</div>
               </Card>
+
               <Card className="p-6">
-                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Active Dealers</div>
+                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
+                  Active Dealers
+                </div>
                 <div className="text-3xl font-extrabold text-blue-500">{activeDealers}</div>
               </Card>
             </div>
 
             <div className="flex justify-end items-center gap-3">
               {lastRefresh && (
-                <span className="text-xs text-zinc-500">Updated {lastRefresh.toLocaleTimeString()}</span>
+                <span className="text-xs text-zinc-500">
+                  Updated {lastRefresh.toLocaleTimeString()}
+                </span>
               )}
+
               <button
                 onClick={() => refreshScoreboard(true)}
                 disabled={loading}
@@ -544,157 +571,181 @@ export default function App() {
               </div>
             )}
 
-           <Card>
-  <div className="p-6 border-b border-zinc-800">
-    <h2 className="text-lg font-bold flex items-center gap-2">
-      <Crown className="w-5 h-5 text-yellow-500" />
-      Overall Top 3
-    </h2>
-    <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
-  </div>
-  <div className="p-6 overflow-x-auto">
-    {loading ? (
-      <TableSkeleton rows={3} />
-    ) : overallTop3.length ? (
-      <table className="w-full min-w-[420px]">
-        <thead>
-          <tr className="text-left text-xs text-zinc-500 uppercase tracking-wider">
-            <th className="pb-3 w-16">Rank</th>
-            <th className="pb-3">Salesperson</th>
-            <th className="pb-3">Dealership</th>
-          </tr>
-        </thead>
-        <tbody>
-          {overallTop3.map((row, i) => (
-            <tr key={i} className="border-t border-zinc-800/50">
-              <td className="py-4"><RankBadge rank={i + 1} /></td>
-              <td className="py-4 font-semibold">{row.salesperson}</td>
-              <td className="py-4 text-zinc-400">{row.dealer}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    ) : (
-      <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
-    )}
-  </div>
-</Card>
+            <Card>
+              <div className="p-6 border-b border-zinc-800">
+                <h2 className="text-lg font-bold flex items-center gap-2">
+                  <Crown className="w-5 h-5 text-yellow-500" />
+                  Overall Top 3
+                </h2>
+                <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
+              </div>
 
-           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-  <Card>
-    <div className="p-5 border-b border-zinc-800">
-      <h3 className="font-bold flex items-center gap-2">
-        <div className="w-3 h-3 rounded-full bg-red-500" />
-        Ferris Top 10
-      </h3>
-    </div>
-    <div className="p-4">
-      {loading ? (
-        <TableSkeleton rows={10} />
-      ) : ferrisTop10.length ? (
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs text-zinc-500 uppercase">
-              <th className="pb-2 w-10">#</th>
-              <th className="pb-2">Salesperson</th>
-            </tr>
-          </thead>
-          <tbody>
-            {ferrisTop10.map((row, i) => (
-              <tr key={i} className="border-t border-zinc-800/30">
-                <td className="py-2">
-                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                </td>
-                <td className="py-2">
-                  <div className="font-medium">{row.salesperson}</div>
-                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-sm text-zinc-500 py-6 text-center">No Ferris submissions yet.</p>
-      )}
-    </div>
-  </Card>
+              <div className="p-6 overflow-x-auto">
+                {loading ? (
+                  <TableSkeleton rows={3} />
+                ) : overallTop3.length ? (
+                  <table className="w-full min-w-[420px]">
+                    <thead>
+                      <tr className="text-left text-xs text-zinc-500 uppercase tracking-wider">
+                        <th className="pb-3 w-16">Rank</th>
+                        <th className="pb-3">Salesperson</th>
+                        <th className="pb-3">Dealership</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {overallTop3.map((row, i) => (
+                        <tr key={i} className="border-t border-zinc-800/50">
+                          <td className="py-4">
+                            <RankBadge rank={i + 1} />
+                          </td>
+                          <td className="py-4 font-semibold">{row.salesperson}</td>
+                          <td className="py-4 text-zinc-400">{row.dealer}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
+                )}
+              </div>
+            </Card>
 
-  <Card>
-    <div className="p-5 border-b border-zinc-800">
-      <h3 className="font-bold flex items-center gap-2">
-        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-        Wright Top 10
-      </h3>
-    </div>
-    <div className="p-4">
-      {loading ? (
-        <TableSkeleton rows={10} />
-      ) : wrightTop10.length ? (
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs text-zinc-500 uppercase">
-              <th className="pb-2 w-10">#</th>
-              <th className="pb-2">Salesperson</th>
-            </tr>
-          </thead>
-          <tbody>
-            {wrightTop10.map((row, i) => (
-              <tr key={i} className="border-t border-zinc-800/30">
-                <td className="py-2">
-                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                </td>
-                <td className="py-2">
-                  <div className="font-medium">{row.salesperson}</div>
-                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-sm text-zinc-500 py-6 text-center">No Wright submissions yet.</p>
-      )}
-    </div>
-  </Card>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <Card>
+                <div className="p-5 border-b border-zinc-800">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-red-500" />
+                    Ferris Top 10
+                  </h3>
+                </div>
 
-  <Card>
-    <div className="p-5 border-b border-zinc-800">
-      <h3 className="font-bold flex items-center gap-2">
-        <div className="w-3 h-3 rounded-full bg-orange-500" />
-        Scag Top 10
-      </h3>
-    </div>
-    <div className="p-4">
-      {loading ? (
-        <TableSkeleton rows={10} />
-      ) : scagTop10.length ? (
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="text-left text-xs text-zinc-500 uppercase">
-              <th className="pb-2 w-10">#</th>
-              <th className="pb-2">Salesperson</th>
-            </tr>
-          </thead>
-          <tbody>
-            {scagTop10.map((row, i) => (
-              <tr key={i} className="border-t border-zinc-800/30">
-                <td className="py-2">
-                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                </td>
-                <td className="py-2">
-                  <div className="font-medium">{row.salesperson}</div>
-                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      ) : (
-        <p className="text-sm text-zinc-500 py-6 text-center">No Scag submissions yet.</p>
-      )}
-    </div>
-  </Card>
-</div>
+                <div className="p-4">
+                  {loading ? (
+                    <TableSkeleton rows={10} />
+                  ) : ferrisTop10.length ? (
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs text-zinc-500 uppercase">
+                          <th className="pb-2 w-10">#</th>
+                          <th className="pb-2">Salesperson</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {ferrisTop10.map((row, i) => (
+                          <tr key={i} className="border-t border-zinc-800/30">
+                            <td className="py-2">
+                              {i < 3 ? (
+                                <RankBadge rank={i + 1} />
+                              ) : (
+                                <span className="text-zinc-500 pl-3">{i + 1}</span>
+                              )}
+                            </td>
+                            <td className="py-2">
+                              <div className="font-medium">{row.salesperson}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">
+                                {row.dealer}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="text-sm text-zinc-500 py-6 text-center">No Ferris submissions yet.</p>
+                  )}
+                </div>
+              </Card>
+
+              <Card>
+                <div className="p-5 border-b border-zinc-800">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
+                    Wright Top 10
+                  </h3>
+                </div>
+
+                <div className="p-4">
+                  {loading ? (
+                    <TableSkeleton rows={10} />
+                  ) : wrightTop10.length ? (
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs text-zinc-500 uppercase">
+                          <th className="pb-2 w-10">#</th>
+                          <th className="pb-2">Salesperson</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {wrightTop10.map((row, i) => (
+                          <tr key={i} className="border-t border-zinc-800/30">
+                            <td className="py-2">
+                              {i < 3 ? (
+                                <RankBadge rank={i + 1} />
+                              ) : (
+                                <span className="text-zinc-500 pl-3">{i + 1}</span>
+                              )}
+                            </td>
+                            <td className="py-2">
+                              <div className="font-medium">{row.salesperson}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">
+                                {row.dealer}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="text-sm text-zinc-500 py-6 text-center">No Wright submissions yet.</p>
+                  )}
+                </div>
+              </Card>
+
+              <Card>
+                <div className="p-5 border-b border-zinc-800">
+                  <h3 className="font-bold flex items-center gap-2">
+                    <div className="w-3 h-3 rounded-full bg-orange-500" />
+                    Scag Top 10
+                  </h3>
+                </div>
+
+                <div className="p-4">
+                  {loading ? (
+                    <TableSkeleton rows={10} />
+                  ) : scagTop10.length ? (
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="text-left text-xs text-zinc-500 uppercase">
+                          <th className="pb-2 w-10">#</th>
+                          <th className="pb-2">Salesperson</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {scagTop10.map((row, i) => (
+                          <tr key={i} className="border-t border-zinc-800/30">
+                            <td className="py-2">
+                              {i < 3 ? (
+                                <RankBadge rank={i + 1} />
+                              ) : (
+                                <span className="text-zinc-500 pl-3">{i + 1}</span>
+                              )}
+                            </td>
+                            <td className="py-2">
+                              <div className="font-medium">{row.salesperson}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">
+                                {row.dealer}
+                              </div>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <p className="text-sm text-zinc-500 py-6 text-center">No Scag submissions yet.</p>
+                  )}
+                </div>
+              </Card>
+            </div>
 
             <p className="text-center text-xs text-zinc-500">
               {error ? 'Unable to load Airtable data.' : 'Live results from Airtable.'}
@@ -716,8 +767,11 @@ export default function App() {
               <Card>
                 <div className="p-6 border-b border-zinc-800">
                   <h2 className="text-xl font-bold text-yellow-500">Register Unit Sales</h2>
-                  <p className="text-sm text-zinc-500">Submit your Vanguard-powered unit sales. Each serial number = 1 entry.</p>
+                  <p className="text-sm text-zinc-500">
+                    Submit your Vanguard-powered unit sales. Each serial number = 1 entry.
+                  </p>
                 </div>
+
                 <div className="p-6 space-y-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -730,6 +784,7 @@ export default function App() {
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
+
                     <div>
                       <label className="block text-sm font-medium text-zinc-400 mb-2">Dealer #</label>
                       <input
@@ -753,6 +808,7 @@ export default function App() {
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
+
                     <div>
                       <label className="block text-sm font-medium text-zinc-400 mb-2">Email</label>
                       <input
@@ -791,6 +847,7 @@ export default function App() {
                         <h3 className="font-semibold">Unit Sales</h3>
                         <p className="text-xs text-zinc-500">Add each unit with date and serial number</p>
                       </div>
+
                       <button
                         onClick={addEntry}
                         className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-500 text-sm font-medium hover:bg-yellow-500/20"
@@ -812,6 +869,7 @@ export default function App() {
                               className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
                             />
                           </div>
+
                           <div className="flex-[1.5]">
                             {i === 0 && <label className="block text-xs text-zinc-500 mb-1">Serial Number</label>}
                             <input
@@ -822,6 +880,7 @@ export default function App() {
                               className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                             />
                           </div>
+
                           {formData.entries.length > 1 && (
                             <button
                               onClick={() => removeEntry(i)}
@@ -843,8 +902,8 @@ export default function App() {
                     <div className="flex gap-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
                       <p className="text-xs text-yellow-500/80">
-                        <strong className="text-yellow-500">Disclaimer:</strong> Documentation for all sales, including invoices
-                        and equipment registrations, will be required in order to claim any reward.
+                        <strong className="text-yellow-500">Disclaimer:</strong> Documentation for all sales,
+                        including invoices and equipment registrations, will be required in order to claim any reward.
                       </p>
                     </div>
                   </div>
@@ -873,7 +932,9 @@ export default function App() {
             <Card>
               <div className="p-6 border-b border-zinc-800">
                 <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
-                <p className="text-sm text-zinc-500 mb-4">Upload a CSV of existing qualified records to push them in batch.</p>
+                <p className="text-sm text-zinc-500 mb-4">
+                  Upload a CSV of existing qualified records to push them in batch.
+                </p>
 
                 <button
                   type="button"
@@ -886,7 +947,10 @@ export default function App() {
 
               <div className="p-6 space-y-6">
                 <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
-                  <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">Expected CSV Columns</div>
+                  <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
+                    Expected CSV Columns
+                  </div>
+
                   <div className="flex flex-wrap gap-2">
                     {['Dealer #', 'Dealer Name', 'Salesperson Name', 'Email', 'Brand', 'Date Sold', 'Serial Number'].map((col) => (
                       <Badge key={col} variant="outline" className="text-xs">
@@ -894,12 +958,20 @@ export default function App() {
                       </Badge>
                     ))}
                   </div>
+
                   <p className="text-xs text-zinc-500 mt-3">
                     Column headers are matched flexibly — "Salesperson Name", "salesperson", or "Rep" all work.
                   </p>
                 </div>
 
-                <input ref={fileRef} type="file" accept=".csv" onChange={handleFileSelect} className="hidden" />
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept=".csv"
+                  onChange={handleFileSelect}
+                  className="hidden"
+                />
+
                 <button
                   type="button"
                   onClick={() => fileRef.current?.click()}
@@ -913,6 +985,7 @@ export default function App() {
                   <div className="space-y-4">
                     <div className="flex items-center justify-between">
                       <h3 className="font-semibold">Preview ({csvData.length} records)</h3>
+
                       <button
                         onClick={() => {
                           setCsvData([])
@@ -935,16 +1008,20 @@ export default function App() {
                             ))}
                           </tr>
                         </thead>
+
                         <tbody>
                           {csvData.slice(0, 5).map((row, i) => (
                             <tr key={i} className="border-t border-zinc-800">
                               {Object.values(row).map((v, j) => (
-                                <td key={j} className="px-3 py-2 text-xs">{String(v)}</td>
+                                <td key={j} className="px-3 py-2 text-xs">
+                                  {String(v)}
+                                </td>
                               ))}
                             </tr>
                           ))}
                         </tbody>
                       </table>
+
                       {csvData.length > 5 && (
                         <div className="text-center text-xs text-zinc-500 py-2 border-t border-zinc-800">
                           ...and {csvData.length - 5} more rows
@@ -988,7 +1065,9 @@ export default function App() {
         {tab === 'prizes' && (
           <div className="space-y-6 animate-fade-up pb-12">
             <div className="text-center py-8">
-              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">Total Rewards</div>
+              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
+                Total Rewards
+              </div>
               <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
                 $30,000
               </div>
@@ -999,6 +1078,7 @@ export default function App() {
                 <Trophy className="w-5 h-5 text-yellow-500" />
                 Sweepstakes Raffle — Per Brand
               </h3>
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {BRANDS.map((brand) => (
                   <Card key={brand} className="text-center p-6">
@@ -1016,17 +1096,25 @@ export default function App() {
                 <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
                 Brand Champion Awards
               </h3>
-              <p className="text-sm text-zinc-400 mb-4">Top sales rep per brand at year end — 3 winners total</p>
+              <p className="text-sm text-zinc-400 mb-4">
+                Top sales rep per brand at year end — 3 winners total
+              </p>
+
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">💰</div>
+                  <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
+                    💰
+                  </div>
                   <div>
                     <div className="text-xl font-bold text-yellow-500">$1,500</div>
                     <div className="text-xs text-zinc-500">Cash per winner</div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">🏆</div>
+                  <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
+                    🏆
+                  </div>
                   <div>
                     <div className="font-semibold">Commemorative Award</div>
                     <div className="text-xs text-zinc-500">Plaque or Championship Ring</div>
@@ -1037,8 +1125,13 @@ export default function App() {
 
             <Card className="p-6 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
               <Badge className="mb-2">Grand Prize</Badge>
-              <h3 className="text-xl font-bold text-yellow-500 mb-1">2026 Pace Vanguard Power Champion</h3>
-              <p className="text-sm text-zinc-400 mb-4">Highest total Vanguard unit sales across all brands</p>
+              <h3 className="text-xl font-bold text-yellow-500 mb-1">
+                2026 Pace Vanguard Power Champion
+              </h3>
+              <p className="text-sm text-zinc-400 mb-4">
+                Highest total Vanguard unit sales across all brands
+              </p>
+
               <div className="flex flex-wrap gap-6">
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">💵</span>
@@ -1047,6 +1140,7 @@ export default function App() {
                     <div className="text-xs text-zinc-500">Cash Award</div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">🥊</span>
                   <div>
@@ -1054,6 +1148,7 @@ export default function App() {
                     <div className="text-xs text-zinc-500">Custom Exclusive</div>
                   </div>
                 </div>
+
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">👑</span>
                   <div>
@@ -1066,10 +1161,69 @@ export default function App() {
 
             <Card className="p-6">
               <h3 className="text-lg font-bold mb-4">How It Works</h3>
-              <div className="space-y-4">
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {[
-                  { step: '01', title: 'Sell 5+ Vanguard-powered units', desc: 'Any combo of Ferris, Scag, and Wright mowers qualifies you.' },
-                  { step: '02', title: 'Every unit = 1 entry', desc: 'No cap. More sales, better odds.' },
-                  { step: '03', title: 'Submit via this portal', desc: 'Enter serial numbers and sale dates. Each record is tracked separately.' },
-                  { step: '04', title: 'Win in the live raffle', desc: '10 winners per brand at $750 each. Brand Champions and Overall Champion named at year end.' },
-                ].map((s, i) =>
+                  {
+                    step: '01',
+                    title: 'Sell 5+ Vanguard-powered units',
+                    desc: 'Any combo of Ferris, Scag, and Wright mowers qualifies you.',
+                  },
+                  {
+                    step: '02',
+                    title: 'Every unit = 1 entry',
+                    desc: 'No cap. More sales, better odds.',
+                  },
+                  {
+                    step: '03',
+                    title: 'Submit via this portal',
+                    desc: 'Enter serial numbers and sale dates. Each record is tracked separately.',
+                  },
+                  {
+                    step: '04',
+                    title: 'Win in the live raffle',
+                    desc: '10 winners per brand at $750 each. Brand Champions and Overall Champion named at year end.',
+                  },
+                ].map((s, i) => (
+                  <div
+                    key={i}
+                    className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5"
+                  >
+                    <div className="text-xs font-bold tracking-[0.2em] text-yellow-500 mb-2">
+                      {s.step}
+                    </div>
+                    <h4 className="text-lg font-semibold mb-2">{s.title}</h4>
+                    <p className="text-sm text-zinc-400">{s.desc}</p>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-bold mb-4">Program Notes</h3>
+              <ul className="space-y-2 text-sm text-zinc-400">
+                <li>• Sales must be submitted with valid serial numbers.</li>
+                <li>• Documentation may be required before any payout is issued.</li>
+                <li>• Leaderboard rankings update from Airtable data.</li>
+                <li>• Final prize decisions are subject to program verification.</li>
+              </ul>
+            </Card>
+          </div>
+        )}
+
+        <footer className="py-10 border-t border-zinc-900 text-center">
+          <div className="flex justify-center mb-4">
+            <img
+              src={paceLogo}
+              alt="Pace"
+              className="h-8 md:h-10 w-auto opacity-90"
+            />
+          </div>
+          <p className="text-xs text-zinc-500">
+            Powered by Pace. Vanguard Sweepstakes Portal.
+          </p>
+        </footer>
+      </div>
+    </div>
+  )
+}
