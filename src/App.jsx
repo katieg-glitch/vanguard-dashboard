@@ -25,17 +25,19 @@ function aggregateScoreboard(records) {
 
     const displayName = String(
       fields['Contest Salesperson Name'] ||
-      fields['Salesperson Name'] ||
-      ''
+        fields['Salesperson Name'] ||
+        ''
     ).trim()
 
     const dealer = String(fields['Dealer Name'] || '').trim()
 
     const brand = String(
       fields['Contest Brand'] ||
-      fields['Brand'] ||
-      ''
-    ).trim().toLowerCase()
+        fields['Brand'] ||
+        ''
+    )
+      .trim()
+      .toLowerCase()
 
     if (!displayName) return
 
@@ -163,7 +165,9 @@ function Badge({ children, variant = 'default', className = '' }) {
   }
 
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${variants[variant]} ${className}`}>
+    <span
+      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold ${variants[variant]} ${className}`}
+    >
       {children}
     </span>
   )
@@ -192,7 +196,6 @@ function TableSkeleton({ rows = 5 }) {
           <Skeleton className="w-9 h-9 rounded-full" />
           <Skeleton className="h-4 flex-1" />
           <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-16" />
         </div>
       ))}
     </div>
@@ -439,11 +442,20 @@ export default function App() {
   }
 
   const overallTop3 = useMemo(() => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3), [scoreboard])
-  const ferrisTop10 = useMemo(() => [...scoreboard].sort((a, b) => b.ferris - a.ferris).slice(0, 10), [scoreboard])
-  const wrightTop10 = useMemo(() => [...scoreboard].sort((a, b) => b.wright - a.wright).slice(0, 10), [scoreboard])
-  const scagTop10 = useMemo(() => [...scoreboard].sort((a, b) => b.scag - a.scag).slice(0, 10), [scoreboard])
+  const ferrisTop10 = useMemo(
+    () => [...scoreboard].filter((r) => r.ferris > 0).sort((a, b) => b.ferris - a.ferris).slice(0, 10),
+    [scoreboard]
+  )
+  const wrightTop10 = useMemo(
+    () => [...scoreboard].filter((r) => r.wright > 0).sort((a, b) => b.wright - a.wright).slice(0, 10),
+    [scoreboard]
+  )
+  const scagTop10 = useMemo(
+    () => [...scoreboard].filter((r) => r.scag > 0).sort((a, b) => b.scag - a.scag).slice(0, 10),
+    [scoreboard]
+  )
 
-  const totalEntries = scoreboard.reduce((s, r) => s + r.total, 0)
+  const rankedReps = scoreboard.length
   const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
   const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
 
@@ -499,8 +511,8 @@ export default function App() {
           <div className="space-y-8 animate-fade-up pb-12">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Card className="p-6">
-                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Total Entries</div>
-                <div className="text-3xl font-extrabold text-yellow-500">{totalEntries}</div>
+                <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Sales Reps Ranked</div>
+                <div className="text-3xl font-extrabold text-yellow-500">{rankedReps}</div>
               </Card>
               <Card className="p-6">
                 <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">Qualified Reps</div>
@@ -538,22 +550,18 @@ export default function App() {
                   <Crown className="w-5 h-5 text-yellow-500" />
                   Overall Top 3
                 </h2>
-                <p className="text-sm text-zinc-500">Highest total sales across all brands</p>
+                <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
               </div>
               <div className="p-6 overflow-x-auto">
                 {loading ? (
                   <TableSkeleton rows={3} />
                 ) : overallTop3.length ? (
-                  <table className="w-full min-w-[600px]">
+                  <table className="w-full min-w-[420px]">
                     <thead>
                       <tr className="text-left text-xs text-zinc-500 uppercase tracking-wider">
                         <th className="pb-3 w-16">Rank</th>
                         <th className="pb-3">Salesperson</th>
                         <th className="pb-3">Dealership</th>
-                        <th className="pb-3 text-center">Ferris</th>
-                        <th className="pb-3 text-center">Wright</th>
-                        <th className="pb-3 text-center">Scag</th>
-                        <th className="pb-3 text-center">Total</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -562,12 +570,6 @@ export default function App() {
                           <td className="py-4"><RankBadge rank={i + 1} /></td>
                           <td className="py-4 font-semibold">{row.salesperson}</td>
                           <td className="py-4 text-zinc-400">{row.dealer}</td>
-                          <td className="py-4 text-center font-medium">{row.ferris}</td>
-                          <td className="py-4 text-center font-medium">{row.wright}</td>
-                          <td className="py-4 text-center font-medium">{row.scag}</td>
-                          <td className="py-4 text-center">
-                            <span className="text-lg font-extrabold text-yellow-500">{row.total}</span>
-                          </td>
                         </tr>
                       ))}
                     </tbody>
@@ -595,7 +597,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Ferris</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -606,9 +607,8 @@ export default function App() {
                             </td>
                             <td className="py-2">
                               <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
                             </td>
-                            <td className="py-2 text-right font-bold text-yellow-500">{row.ferris}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -635,7 +635,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Wright</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -646,9 +645,8 @@ export default function App() {
                             </td>
                             <td className="py-2">
                               <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
                             </td>
-                            <td className="py-2 text-right font-bold text-yellow-500">{row.wright}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -675,7 +673,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Scag</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -686,9 +683,8 @@ export default function App() {
                             </td>
                             <td className="py-2">
                               <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
                             </td>
-                            <td className="py-2 text-right font-bold text-yellow-500">{row.scag}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -967,7 +963,13 @@ export default function App() {
                 )}
 
                 {uploadResult && (
-                  <div className={`p-4 rounded-lg ${uploadResult.success ? 'bg-green-500/10 border border-green-500/30' : 'bg-red-500/10 border border-red-500/30'}`}>
+                  <div
+                    className={`p-4 rounded-lg ${
+                      uploadResult.success
+                        ? 'bg-green-500/10 border border-green-500/30'
+                        : 'bg-red-500/10 border border-red-500/30'
+                    }`}
+                  >
                     {uploadResult.success ? (
                       <p className="text-green-500 font-medium flex items-center gap-2">
                         <CheckCircle2 className="w-5 h-5" />
@@ -1070,72 +1072,4 @@ export default function App() {
                   { step: '02', title: 'Every unit = 1 entry', desc: 'No cap. More sales, better odds.' },
                   { step: '03', title: 'Submit via this portal', desc: 'Enter serial numbers and sale dates. Each record is tracked separately.' },
                   { step: '04', title: 'Win in the live raffle', desc: '10 winners per brand at $750 each. Brand Champions and Overall Champion named at year end.' },
-                ].map((s, i) => (
-                  <div key={i} className="flex gap-4">
-                    <div className="w-11 h-11 rounded-lg bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center font-bold text-sm text-yellow-500 flex-shrink-0">
-                      {s.step}
-                    </div>
-                    <div>
-                      <div className="font-semibold">{s.title}</div>
-                      <div className="text-sm text-zinc-400">{s.desc}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">Eligibility & Verification</h3>
-              <p className="text-zinc-400 text-sm mb-4">
-                Open to dealership sales professionals selling Vanguard-powered Ferris, Scag, and Wright units.
-                Minimum of 5 units sold to qualify for the sweepstakes drawing.
-              </p>
-              <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-lg p-4">
-                <p className="text-xs text-yellow-500/80">
-                  <strong className="text-yellow-500">Important:</strong> Documentation for all sales — including invoices
-                  and equipment registrations — will be required in order to claim any reward.
-                </p>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">Rewards Breakdown</h3>
-              <div className="space-y-4">
-                {[
-                  { label: 'Sweepstakes Raffle (3 brands × $7,500)', amount: '$22,500', pct: 75 },
-                  { label: 'Brand Champions (3 × $1,500)', amount: '$4,500', pct: 15 },
-                  { label: 'Overall Champion', amount: '$3,000', pct: 10 },
-                ].map((item, i) => (
-                  <div key={i}>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-sm text-zinc-400">{item.label}</span>
-                      <span className="font-bold text-yellow-500">{item.amount}</span>
-                    </div>
-                    <Progress value={item.pct} />
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        )}
-
-        <footer className="text-center py-8 border-t border-zinc-800 mt-8">
-          <div className="flex justify-center mb-3">
-            <a
-              href="https://www.pacelink.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src={paceLogo}
-                alt="Pace"
-                className="h-16 md:h-20 w-auto"
-              />
-            </a>
-          </div>
-          <div className="text-xs text-zinc-500">2026 Vanguard Power Sweepstakes — Powered by Pace</div>
-        </footer>
-      </div>
-    </div>
-  )
-}
+                ].map((s, i) =>
