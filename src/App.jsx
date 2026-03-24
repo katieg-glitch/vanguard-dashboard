@@ -1204,8 +1204,9 @@ export default function App() {
               <ul className="space-y-2 text-sm text-zinc-400">
                 <li>• Sales must be submitted with valid serial numbers.</li>
                 <li>• Documentation may be required before any payout is issued.</li>
-                <li>• Leaderboard rankings update from Airtable data.</li>
+                <li>• Leaderboard rankings update automatically.</li>
                 <li>• Final prize decisions are subject to program verification.</li>
+                <li>• Any participant awarded a Top Salesperson prize will be excluded from the $750 raffle drawing. </li>
               </ul>
             </Card>
           </div>
