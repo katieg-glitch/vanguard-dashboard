@@ -544,157 +544,157 @@ export default function App() {
               </div>
             )}
 
-            <Card>
-              <div className="p-6 border-b border-zinc-800">
-                <h2 className="text-lg font-bold flex items-center gap-2">
-                  <Crown className="w-5 h-5 text-yellow-500" />
-                  Overall Top 3
-                </h2>
-                <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
-              </div>
-              <div className="p-6 overflow-x-auto">
-                {loading ? (
-                  <TableSkeleton rows={3} />
-                ) : overallTop3.length ? (
-                  <table className="w-full min-w-[420px]">
-                    <thead>
-                      <tr className="text-left text-xs text-zinc-500 uppercase tracking-wider">
-                        <th className="pb-3 w-16">Rank</th>
-                        <th className="pb-3">Salesperson</th>
-                        <th className="pb-3">Dealership</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {overallTop3.map((row, i) => (
-                        <tr key={i} className="border-t border-zinc-800/50">
-                          <td className="py-4"><RankBadge rank={i + 1} /></td>
-                          <td className="py-4 font-semibold">{row.salesperson}</td>
-                          <td className="py-4 text-zinc-400">{row.dealer}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
-                )}
-              </div>
-            </Card>
+           <Card>
+  <div className="p-6 border-b border-zinc-800">
+    <h2 className="text-lg font-bold flex items-center gap-2">
+      <Crown className="w-5 h-5 text-yellow-500" />
+      Overall Top 3
+    </h2>
+    <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
+  </div>
+  <div className="p-6 overflow-x-auto">
+    {loading ? (
+      <TableSkeleton rows={3} />
+    ) : overallTop3.length ? (
+      <table className="w-full min-w-[420px]">
+        <thead>
+          <tr className="text-left text-xs text-zinc-500 uppercase tracking-wider">
+            <th className="pb-3 w-16">Rank</th>
+            <th className="pb-3">Salesperson</th>
+            <th className="pb-3">Dealership</th>
+          </tr>
+        </thead>
+        <tbody>
+          {overallTop3.map((row, i) => (
+            <tr key={i} className="border-t border-zinc-800/50">
+              <td className="py-4"><RankBadge rank={i + 1} /></td>
+              <td className="py-4 font-semibold">{row.salesperson}</td>
+              <td className="py-4 text-zinc-400">{row.dealer}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    ) : (
+      <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
+    )}
+  </div>
+</Card>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <Card>
-                <div className="p-5 border-b border-zinc-800">
-                  <h3 className="font-bold flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-red-500" />
-                    Ferris Top 10
-                  </h3>
-                </div>
-                <div className="p-4">
-                  {loading ? (
-                    <TableSkeleton rows={10} />
-                  ) : ferrisTop10.length ? (
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-left text-xs text-zinc-500 uppercase">
-                          <th className="pb-2 w-10">#</th>
-                          <th className="pb-2">Salesperson</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {ferrisTop10.map((row, i) => (
-                          <tr key={i} className="border-t border-zinc-800/30">
-                            <td className="py-2">
-                              {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                            </td>
-                            <td className="py-2">
-                              <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Ferris submissions yet.</p>
-                  )}
-                </div>
-              </Card>
+           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <Card>
+    <div className="p-5 border-b border-zinc-800">
+      <h3 className="font-bold flex items-center gap-2">
+        <div className="w-3 h-3 rounded-full bg-red-500" />
+        Ferris Top 10
+      </h3>
+    </div>
+    <div className="p-4">
+      {loading ? (
+        <TableSkeleton rows={10} />
+      ) : ferrisTop10.length ? (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs text-zinc-500 uppercase">
+              <th className="pb-2 w-10">#</th>
+              <th className="pb-2">Salesperson</th>
+            </tr>
+          </thead>
+          <tbody>
+            {ferrisTop10.map((row, i) => (
+              <tr key={i} className="border-t border-zinc-800/30">
+                <td className="py-2">
+                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
+                </td>
+                <td className="py-2">
+                  <div className="font-medium">{row.salesperson}</div>
+                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-sm text-zinc-500 py-6 text-center">No Ferris submissions yet.</p>
+      )}
+    </div>
+  </Card>
 
-              <Card>
-                <div className="p-5 border-b border-zinc-800">
-                  <h3 className="font-bold flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-yellow-500" />
-                    Wright Top 10
-                  </h3>
-                </div>
-                <div className="p-4">
-                  {loading ? (
-                    <TableSkeleton rows={10} />
-                  ) : wrightTop10.length ? (
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-left text-xs text-zinc-500 uppercase">
-                          <th className="pb-2 w-10">#</th>
-                          <th className="pb-2">Salesperson</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {wrightTop10.map((row, i) => (
-                          <tr key={i} className="border-t border-zinc-800/30">
-                            <td className="py-2">
-                              {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                            </td>
-                            <td className="py-2">
-                              <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Wright submissions yet.</p>
-                  )}
-                </div>
-              </Card>
+  <Card>
+    <div className="p-5 border-b border-zinc-800">
+      <h3 className="font-bold flex items-center gap-2">
+        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+        Wright Top 10
+      </h3>
+    </div>
+    <div className="p-4">
+      {loading ? (
+        <TableSkeleton rows={10} />
+      ) : wrightTop10.length ? (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs text-zinc-500 uppercase">
+              <th className="pb-2 w-10">#</th>
+              <th className="pb-2">Salesperson</th>
+            </tr>
+          </thead>
+          <tbody>
+            {wrightTop10.map((row, i) => (
+              <tr key={i} className="border-t border-zinc-800/30">
+                <td className="py-2">
+                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
+                </td>
+                <td className="py-2">
+                  <div className="font-medium">{row.salesperson}</div>
+                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-sm text-zinc-500 py-6 text-center">No Wright submissions yet.</p>
+      )}
+    </div>
+  </Card>
 
-              <Card>
-                <div className="p-5 border-b border-zinc-800">
-                  <h3 className="font-bold flex items-center gap-2">
-                    <div className="w-3 h-3 rounded-full bg-orange-500" />
-                    Scag Top 10
-                  </h3>
-                </div>
-                <div className="p-4">
-                  {loading ? (
-                    <TableSkeleton rows={10} />
-                  ) : scagTop10.length ? (
-                    <table className="w-full text-sm">
-                      <thead>
-                        <tr className="text-left text-xs text-zinc-500 uppercase">
-                          <th className="pb-2 w-10">#</th>
-                          <th className="pb-2">Salesperson</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {scagTop10.map((row, i) => (
-                          <tr key={i} className="border-t border-zinc-800/30">
-                            <td className="py-2">
-                              {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
-                            </td>
-                            <td className="py-2">
-                              <div className="font-medium">{row.salesperson}</div>
-                              <div className="text-xs text-zinc-500 truncate max-w-[160px]">{row.dealer}</div>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Scag submissions yet.</p>
-                  )}
-                </div>
-              </Card>
-            </div>
+  <Card>
+    <div className="p-5 border-b border-zinc-800">
+      <h3 className="font-bold flex items-center gap-2">
+        <div className="w-3 h-3 rounded-full bg-orange-500" />
+        Scag Top 10
+      </h3>
+    </div>
+    <div className="p-4">
+      {loading ? (
+        <TableSkeleton rows={10} />
+      ) : scagTop10.length ? (
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="text-left text-xs text-zinc-500 uppercase">
+              <th className="pb-2 w-10">#</th>
+              <th className="pb-2">Salesperson</th>
+            </tr>
+          </thead>
+          <tbody>
+            {scagTop10.map((row, i) => (
+              <tr key={i} className="border-t border-zinc-800/30">
+                <td className="py-2">
+                  {i < 3 ? <RankBadge rank={i + 1} /> : <span className="text-zinc-500 pl-3">{i + 1}</span>}
+                </td>
+                <td className="py-2">
+                  <div className="font-medium">{row.salesperson}</div>
+                  <div className="text-xs text-zinc-500 truncate max-w-[120px]">{row.dealer}</div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : (
+        <p className="text-sm text-zinc-500 py-6 text-center">No Scag submissions yet.</p>
+      )}
+    </div>
+  </Card>
+</div>
 
             <p className="text-center text-xs text-zinc-500">
               {error ? 'Unable to load Airtable data.' : 'Live results from Airtable.'}
