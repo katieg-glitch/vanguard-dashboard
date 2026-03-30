@@ -14,6 +14,8 @@ import {
 } from 'lucide-react'
 import logo from '../Vanguard-logo.png'
 import paceLogo from '../Pace Logo White 2023.png'
+import prizeItems from '../Vanguard Championship Ring.png'
+import prizeItems from '../Vanguard Championship Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
@@ -435,24 +437,46 @@ export default function App() {
     [scoreboard]
   )
 
-  const ferrisTop10 = useMemo(
-    () => [...scoreboard].filter((r) => r.ferris > 0).sort((a, b) => b.ferris - a.ferris).slice(0, 10),
-    [scoreboard]
-  )
+const eligibleScoreboard = useMemo(
+  () => scoreboard.filter((r) => r.total >= 5),
+  [scoreboard]
+)
 
-  const wrightTop10 = useMemo(
-    () => [...scoreboard].filter((r) => r.wright > 0).sort((a, b) => b.wright - a.wright).slice(0, 10),
-    [scoreboard]
-  )
+const overallTop3 = useMemo(
+  () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+  [eligibleScoreboard]
+)
 
-  const scagTop10 = useMemo(
-    () => [...scoreboard].filter((r) => r.scag > 0).sort((a, b) => b.scag - a.scag).slice(0, 10),
-    [scoreboard]
-  )
+const ferrisTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.ferris > 0)
+      .sort((a, b) => b.ferris - a.ferris)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
 
-  const rankedReps = scoreboard.length
-  const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
-  const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
+const wrightTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.wright > 0)
+      .sort((a, b) => b.wright - a.wright)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
+
+const scagTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.scag > 0)
+      .sort((a, b) => b.scag - a.scag)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
+
+const rankedReps = eligibleScoreboard.length
+const qualifiedReps = eligibleScoreboard.length
+const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
@@ -608,7 +632,31 @@ export default function App() {
                   <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
                 )}
               </div>
-            </Card>
+             
+              <Card className="overflow-hidden bg-gradient-to-br from-zinc-900 to-black border-yellow-500/20">
+  <div className="p-6 md:p-8">
+    <div className="text-center mb-4">
+      <div className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-2">
+        Top Sales Prizes
+      </div>
+      <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+        Championship Ring + Belt
+      </h2>
+      <p className="text-sm text-zinc-400 mt-2">
+        Earn your place on the board and compete for the year-end title.
+      </p>
+    </div>
+
+    <div className="flex justify-center">
+      <img
+        src={prizeItems}
+        alt="Championship ring and belt prizes"
+        className="w-full max-w-3xl h-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
+      />
+    </div>
+  </div>
+</Card>
+           
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card>
