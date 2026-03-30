@@ -14,8 +14,8 @@ import {
 } from 'lucide-react'
 import logo from '../Vanguard-logo.png'
 import paceLogo from '../Pace Logo White 2023.png'
-import prizeItems from '../Vanguard Championship Ring.png'
-import prizeItems from '../Vanguard Championship Belt.png'
+import championshipRing from '../Vanguard Championship Ring.png'
+import championshipBelt from '../Vanguard Championship Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
@@ -190,6 +190,41 @@ function TableSkeleton({ rows = 5 }) {
         </div>
       ))}
     </div>
+  )
+}
+
+function PrizeShowcase({ title, subtitle }) {
+  return (
+    <Card className="overflow-hidden bg-gradient-to-br from-zinc-950 via-zinc-900 to-black border-yellow-500/20">
+      <div className="p-6 md:p-8">
+        <div className="text-center mb-6">
+          <div className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-2">
+            Championship Prizes
+          </div>
+          <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+            {title}
+          </h2>
+          <p className="text-sm text-zinc-400 mt-2">{subtitle}</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div className="flex justify-center">
+            <img
+              src={championshipRing}
+              alt="Vanguard Championship Ring"
+              className="max-h-[260px] w-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
+            />
+          </div>
+          <div className="flex justify-center">
+            <img
+              src={championshipBelt}
+              alt="Vanguard Championship Belt"
+              className="max-h-[260px] w-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
+            />
+          </div>
+        </div>
+      </div>
+    </Card>
   )
 }
 
@@ -394,7 +429,9 @@ export default function App() {
       const find = (row, keys) => {
         for (const k of keys) {
           const match = Object.keys(row).find(
-            (rk) => rk.toLowerCase().replace(/[^a-z0-9]/g, '') === k.toLowerCase().replace(/[^a-z0-9]/g, '')
+            (rk) =>
+              rk.toLowerCase().replace(/[^a-z0-9]/g, '') ===
+              k.toLowerCase().replace(/[^a-z0-9]/g, '')
           )
           if (match && row[match]) return row[match]
         }
@@ -432,51 +469,46 @@ export default function App() {
     }
   }
 
-  const overallTop3 = useMemo(
-    () => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+  const eligibleScoreboard = useMemo(
+    () => scoreboard.filter((r) => r.total >= 5),
     [scoreboard]
   )
 
-const eligibleScoreboard = useMemo(
-  () => scoreboard.filter((r) => r.total >= 5),
-  [scoreboard]
-)
+  const overallTop3 = useMemo(
+    () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+    [eligibleScoreboard]
+  )
 
-const overallTop3 = useMemo(
-  () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
-  [eligibleScoreboard]
-)
+  const ferrisTop10 = useMemo(
+    () =>
+      [...eligibleScoreboard]
+        .filter((r) => r.ferris > 0)
+        .sort((a, b) => b.ferris - a.ferris)
+        .slice(0, 10),
+    [eligibleScoreboard]
+  )
 
-const ferrisTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.ferris > 0)
-      .sort((a, b) => b.ferris - a.ferris)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
+  const wrightTop10 = useMemo(
+    () =>
+      [...eligibleScoreboard]
+        .filter((r) => r.wright > 0)
+        .sort((a, b) => b.wright - a.wright)
+        .slice(0, 10),
+    [eligibleScoreboard]
+  )
 
-const wrightTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.wright > 0)
-      .sort((a, b) => b.wright - a.wright)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
+  const scagTop10 = useMemo(
+    () =>
+      [...eligibleScoreboard]
+        .filter((r) => r.scag > 0)
+        .sort((a, b) => b.scag - a.scag)
+        .slice(0, 10),
+    [eligibleScoreboard]
+  )
 
-const scagTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.scag > 0)
-      .sort((a, b) => b.scag - a.scag)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
-
-const rankedReps = eligibleScoreboard.length
-const qualifiedReps = eligibleScoreboard.length
-const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
+  const rankedReps = eligibleScoreboard.length
+  const qualifiedReps = eligibleScoreboard.length
+  const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
@@ -495,7 +527,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
 
           <div className="inline-flex items-center gap-2 bg-yellow-500/10 border border-yellow-500/20 rounded-full px-4 py-1.5 mb-4">
             <Star className="w-3 h-3 text-yellow-500" fill="currentColor" />
-            <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">2026 Season</span>
+            <span className="text-xs font-bold text-yellow-500 tracking-wider uppercase">
+              2026 Season
+            </span>
           </div>
 
           <h1 className="text-4xl md:text-5xl font-black tracking-tight bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
@@ -549,6 +583,11 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
 
         {tab === 'scoreboard' && (
           <div className="space-y-8 animate-fade-up pb-12">
+            <PrizeShowcase
+              title="Championship Ring + Belt"
+              subtitle="Sell 5+ qualified units to appear on the scoreboard and compete for the year-end title."
+            />
+
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Card className="p-6">
                 <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-1">
@@ -601,7 +640,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                   <Crown className="w-5 h-5 text-yellow-500" />
                   Overall Top 3
                 </h2>
-                <p className="text-sm text-zinc-500">Top salespeople across all brands</p>
+                <p className="text-sm text-zinc-500">
+                  Top qualified salespeople with 5+ Vanguard-powered unit sales
+                </p>
               </div>
 
               <div className="p-6 overflow-x-auto">
@@ -629,34 +670,12 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </tbody>
                   </table>
                 ) : (
-                  <p className="text-sm text-zinc-500 py-6 text-center">No submissions yet.</p>
+                  <p className="text-sm text-zinc-500 py-6 text-center">
+                    No qualified contestants yet.
+                  </p>
                 )}
               </div>
-             
-              <Card className="overflow-hidden bg-gradient-to-br from-zinc-900 to-black border-yellow-500/20">
-  <div className="p-6 md:p-8">
-    <div className="text-center mb-4">
-      <div className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-2">
-        Top Sales Prizes
-      </div>
-      <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
-        Championship Ring + Belt
-      </h2>
-      <p className="text-sm text-zinc-400 mt-2">
-        Earn your place on the board and compete for the year-end title.
-      </p>
-    </div>
-
-    <div className="flex justify-center">
-      <img
-        src={prizeItems}
-        alt="Championship ring and belt prizes"
-        className="w-full max-w-3xl h-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
-      />
-    </div>
-  </div>
-</Card>
-           
+            </Card>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <Card>
@@ -699,7 +718,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                       </tbody>
                     </table>
                   ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Ferris submissions yet.</p>
+                    <p className="text-sm text-zinc-500 py-6 text-center">
+                      No Ferris-qualified contestants yet.
+                    </p>
                   )}
                 </div>
               </Card>
@@ -744,7 +765,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                       </tbody>
                     </table>
                   ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Wright submissions yet.</p>
+                    <p className="text-sm text-zinc-500 py-6 text-center">
+                      No Wright-qualified contestants yet.
+                    </p>
                   )}
                 </div>
               </Card>
@@ -789,7 +812,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                       </tbody>
                     </table>
                   ) : (
-                    <p className="text-sm text-zinc-500 py-6 text-center">No Scag submissions yet.</p>
+                    <p className="text-sm text-zinc-500 py-6 text-center">
+                      No Scag-qualified contestants yet.
+                    </p>
                   )}
                 </div>
               </Card>
@@ -823,23 +848,31 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                 <div className="p-6 space-y-6">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-400 mb-2">Dealer Name</label>
+                      <label className="block text-sm font-medium text-zinc-400 mb-2">
+                        Dealer Name
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. ProCut Equipment"
                         value={formData.dealerName}
-                        onChange={(e) => setFormData((p) => ({ ...p, dealerName: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, dealerName: e.target.value }))
+                        }
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-zinc-400 mb-2">Dealer #</label>
+                      <label className="block text-sm font-medium text-zinc-400 mb-2">
+                        Dealer #
+                      </label>
                       <input
                         type="text"
                         placeholder="e.g. D-10423"
                         value={formData.dealerNumber}
-                        onChange={(e) => setFormData((p) => ({ ...p, dealerNumber: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, dealerNumber: e.target.value }))
+                        }
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
@@ -847,30 +880,40 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
 
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-zinc-400 mb-2">Salesperson Name</label>
+                      <label className="block text-sm font-medium text-zinc-400 mb-2">
+                        Salesperson Name
+                      </label>
                       <input
                         type="text"
                         placeholder="Full name"
                         value={formData.salesperson}
-                        onChange={(e) => setFormData((p) => ({ ...p, salesperson: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, salesperson: e.target.value }))
+                        }
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
 
                     <div>
-                      <label className="block text-sm font-medium text-zinc-400 mb-2">Email</label>
+                      <label className="block text-sm font-medium text-zinc-400 mb-2">
+                        Email
+                      </label>
                       <input
                         type="email"
                         placeholder="you@dealer.com"
                         value={formData.email}
-                        onChange={(e) => setFormData((p) => ({ ...p, email: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((p) => ({ ...p, email: e.target.value }))
+                        }
                         className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-zinc-400 mb-2">Brand</label>
+                    <label className="block text-sm font-medium text-zinc-400 mb-2">
+                      Brand
+                    </label>
                     <div className="flex gap-3">
                       {BRANDS.map((b) => (
                         <button
@@ -893,7 +936,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     <div className="flex items-center justify-between mb-4">
                       <div>
                         <h3 className="font-semibold">Unit Sales</h3>
-                        <p className="text-xs text-zinc-500">Add each unit with date and serial number</p>
+                        <p className="text-xs text-zinc-500">
+                          Add each unit with date and serial number
+                        </p>
                       </div>
 
                       <button
@@ -909,7 +954,11 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                       {formData.entries.map((entry, i) => (
                         <div key={i} className="flex gap-3 items-end">
                           <div className="flex-1">
-                            {i === 0 && <label className="block text-xs text-zinc-500 mb-1">Date Sold</label>}
+                            {i === 0 && (
+                              <label className="block text-xs text-zinc-500 mb-1">
+                                Date Sold
+                              </label>
+                            )}
                             <input
                               type="date"
                               value={entry.dateSold}
@@ -919,12 +968,18 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                           </div>
 
                           <div className="flex-[1.5]">
-                            {i === 0 && <label className="block text-xs text-zinc-500 mb-1">Serial Number</label>}
+                            {i === 0 && (
+                              <label className="block text-xs text-zinc-500 mb-1">
+                                Serial Number
+                              </label>
+                            )}
                             <input
                               type="text"
                               placeholder="e.g. VG-2026-XXXXX"
                               value={entry.serialNumber}
-                              onChange={(e) => updateEntry(i, 'serialNumber', e.target.value)}
+                              onChange={(e) =>
+                                updateEntry(i, 'serialNumber', e.target.value)
+                              }
                               className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
                             />
                           </div>
@@ -942,7 +997,8 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </div>
 
                     <p className="text-xs text-zinc-500 mt-2">
-                      {formData.entries.length} unit{formData.entries.length !== 1 ? 's' : ''} — each creates a separate record
+                      {formData.entries.length} unit{formData.entries.length !== 1 ? 's' : ''} — each
+                      creates a separate record
                     </p>
                   </div>
 
@@ -950,8 +1006,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     <div className="flex gap-3">
                       <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
                       <p className="text-xs text-yellow-500/80">
-                        <strong className="text-yellow-500">Disclaimer:</strong> Documentation for all sales,
-                        including invoices and equipment registrations, will be required in order to claim any reward.
+                        <strong className="text-yellow-500">Disclaimer:</strong> Documentation for
+                        all sales, including invoices and equipment registrations, will be required
+                        in order to claim any reward.
                       </p>
                     </div>
                   </div>
@@ -964,7 +1021,12 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
 
                   <button
                     onClick={handleSubmit}
-                    disabled={submitting || !formData.dealerName || !formData.salesperson || !formData.brand}
+                    disabled={
+                      submitting ||
+                      !formData.dealerName ||
+                      !formData.salesperson ||
+                      !formData.brand
+                    }
                     className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {submitting ? 'Submitting...' : 'Submit Sales Entries'}
@@ -1000,7 +1062,15 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                   </div>
 
                   <div className="flex flex-wrap gap-2">
-                    {['Dealer #', 'Dealer Name', 'Salesperson Name', 'Email', 'Brand', 'Date Sold', 'Serial Number'].map((col) => (
+                    {[
+                      'Dealer #',
+                      'Dealer Name',
+                      'Salesperson Name',
+                      'Email',
+                      'Brand',
+                      'Date Sold',
+                      'Serial Number',
+                    ].map((col) => (
                       <Badge key={col} variant="outline" className="text-xs">
                         {col}
                       </Badge>
@@ -1008,7 +1078,8 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                   </div>
 
                   <p className="text-xs text-zinc-500 mt-3">
-                    Column headers are matched flexibly — "Salesperson Name", "salesperson", or "Rep" all work.
+                    Column headers are matched flexibly — "Salesperson Name", "salesperson", or
+                    "Rep" all work.
                   </p>
                 </div>
 
@@ -1050,7 +1121,10 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                         <thead className="bg-zinc-800">
                           <tr>
                             {Object.keys(csvData[0]).map((h) => (
-                              <th key={h} className="px-3 py-2 text-left text-xs text-zinc-400 font-medium">
+                              <th
+                                key={h}
+                                className="px-3 py-2 text-left text-xs text-zinc-400 font-medium"
+                              >
                                 {h}
                               </th>
                             ))}
@@ -1082,7 +1156,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                       disabled={uploading}
                       className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-colors disabled:opacity-50"
                     >
-                      {uploading ? `Uploading ${csvData.length} records...` : `Push ${csvData.length} Records`}
+                      {uploading
+                        ? `Uploading ${csvData.length} records...`
+                        : `Push ${csvData.length} Records`}
                     </button>
                   </div>
                 )}
@@ -1101,7 +1177,9 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                         Successfully uploaded {uploadResult.count} records!
                       </p>
                     ) : (
-                      <p className="text-red-400 font-medium">Upload failed: {uploadResult.error}</p>
+                      <p className="text-red-400 font-medium">
+                        Upload failed: {uploadResult.error}
+                      </p>
                     )}
                   </div>
                 )}
@@ -1112,6 +1190,11 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
 
         {tab === 'prizes' && (
           <div className="space-y-6 animate-fade-up pb-12">
+            <PrizeShowcase
+              title="Ring + Belt"
+              subtitle="Top performers compete for the championship ring and the overall champion belt."
+            />
+
             <div className="text-center py-8">
               <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
                 Total Rewards
@@ -1254,8 +1337,14 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                 <li>• Documentation may be required before any payout is issued.</li>
                 <li>• Leaderboard rankings update automatically.</li>
                 <li>• Final prize decisions are subject to program verification.</li>
-                <li>• Any participant awarded a Top Salesperson prize will be excluded from the $750 raffle drawing. </li>
-                <li>• If you apply for spiffs you will automatically be entered into the sweepstakes. </li>
+                <li>
+                  • Any participant awarded a Top Salesperson prize will be excluded from the
+                  $750 raffle drawing.
+                </li>
+                <li>
+                  • If you apply for SPIFFs, you will automatically be entered into the
+                  sweepstakes.
+                </li>
               </ul>
             </Card>
           </div>
