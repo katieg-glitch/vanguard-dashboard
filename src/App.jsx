@@ -1117,7 +1117,7 @@ export default function App() {
                   </div>
                   <div>
                     <div className="font-semibold">Commemorative Award</div>
-                    <div className="text-xs text-zinc-500">Plaque or Championship Ring</div>
+                    <div className="text-xs text-zinc-500">Championship Ring</div>
                   </div>
                 </div>
               </div>
@@ -1207,6 +1207,7 @@ export default function App() {
                 <li>• Leaderboard rankings update automatically.</li>
                 <li>• Final prize decisions are subject to program verification.</li>
                 <li>• Any participant awarded a Top Salesperson prize will be excluded from the $750 raffle drawing. </li>
+                <li>• If you apply for spiffs you will automatically be entered into the sweepstakes. </li>
               </ul>
             </Card>
           </div>
