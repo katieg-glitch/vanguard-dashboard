@@ -14,8 +14,8 @@ import {
 } from 'lucide-react'
 import logo from '../Vanguard-logo.png'
 import paceLogo from '../Pace Logo White 2023.png'
-import championshipRing from '../Vanguard Championship Ring.png'
-import championshipBelt from '../Vanguard Championship Belt.png'
+import championshipRing from '../Ring.png'
+import championshipBelt from '../Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
@@ -1188,21 +1188,36 @@ export default function App() {
           </div>
         )}
 
-        {tab === 'prizes' && (
-          <div className="space-y-6 animate-fade-up pb-12">
-            <PrizeShowcase
-              title="Ring + Belt"
-              subtitle="Top performers compete for the championship ring and the overall champion belt."
-            />
+{tab === 'prizes' && (
+  <div className="space-y-6 animate-fade-up pb-12">
+    <div className="flex justify-center">
+      <div className="grid grid-cols-2 gap-6 items-center max-w-2xl w-full">
+        <div className="flex justify-center">
+          <img
+            src={championshipRing}
+            alt="Vanguard Championship Ring"
+            className="max-h-[140px] md:max-h-[180px] w-auto object-contain"
+          />
+        </div>
 
-            <div className="text-center py-8">
-              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-                Total Rewards
-              </div>
-              <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                $30,000
-              </div>
-            </div>
+        <div className="flex justify-center">
+          <img
+            src={championshipBelt}
+            alt="Vanguard Championship Belt"
+            className="max-h-[140px] md:max-h-[180px] w-auto object-contain"
+          />
+        </div>
+      </div>
+    </div>
+
+    <div className="text-center py-8">
+      <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
+        Total Rewards
+      </div>
+      <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
+        $30,000
+      </div>
+    </div>
 
             <div>
               <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
