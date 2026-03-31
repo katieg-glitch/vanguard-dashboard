@@ -1244,7 +1244,7 @@ export default function App() {
             </div>
 
             <Card className="p-6 overflow-hidden">
-              <div className="grid grid-cols-1 md:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
+             <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
                     <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
@@ -1282,7 +1282,7 @@ export default function App() {
             </Card>
 
             <Card className="p-6 overflow-hidden bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
-              <div className="grid grid-cols-1 md:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
+              <div className="space-y-6">
                 <div>
                   <Badge className="mb-3">Grand Prize</Badge>
                   <h3 className="text-xl md:text-2xl font-bold text-yellow-500 mb-2">
