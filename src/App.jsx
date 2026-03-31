@@ -1270,18 +1270,6 @@ export default function App() {
         </div>
       </div>
     </div>
-
-    <div className="flex justify-center md:justify-end">
-      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-        <img
-          src={championshipRing}
-          alt="Vanguard Championship Ring"
-          className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-        />
-      </div>
-    </div>
-  </div>
 </Card>
 
           <Card className="p-6 overflow-hidden bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
