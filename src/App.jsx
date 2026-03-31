@@ -1284,41 +1284,62 @@ export default function App() {
   </div>
 </Card>
 
-            <Card className="p-6 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
-              <Badge className="mb-2">Grand Prize</Badge>
-              <h3 className="text-xl font-bold text-yellow-500 mb-1">
-                2026 Pace Vanguard Power Champion
-              </h3>
-              <p className="text-sm text-zinc-400 mb-4">
-                Highest total Vanguard unit sales across all brands
-              </p>
+          <Card className="p-6 overflow-hidden bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
+  <div className="grid grid-cols-1 md:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
+    <div>
+      <Badge className="mb-3">Grand Prize</Badge>
+      <h3 className="text-xl md:text-2xl font-bold text-yellow-500 mb-2">
+        2026 Pace Vanguard Power Champion
+      </h3>
+      <p className="text-base text-zinc-400 mb-6">
+        Highest total Vanguard unit sales across all brands
+      </p>
 
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">💵</span>
-                  <div>
-                    <div className="text-xl font-bold text-yellow-500">$3,000</div>
-                    <div className="text-xs text-zinc-500">Cash Award</div>
-                  </div>
-                </div>
+      <div className="flex flex-wrap gap-8">
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
+            💵
+          </div>
+          <div>
+            <div className="text-2xl font-bold text-yellow-500">$3,000</div>
+            <div className="text-sm text-zinc-500">Cash Award</div>
+          </div>
+        </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">🥊</span>
-                  <div>
-                    <div className="font-bold text-yellow-500">Championship Belt</div>
-                    <div className="text-xs text-zinc-500">Custom Exclusive</div>
-                  </div>
-                </div>
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
+            🥊
+          </div>
+          <div>
+            <div className="text-lg font-semibold text-yellow-500">Championship Belt</div>
+            <div className="text-sm text-zinc-500">Custom Exclusive</div>
+          </div>
+        </div>
 
-                <div className="flex items-center gap-3">
-                  <span className="text-2xl">👑</span>
-                  <div>
-                    <div className="font-bold text-yellow-500">Power Champion</div>
-                    <div className="text-xs text-zinc-500">Official Title</div>
-                  </div>
-                </div>
-              </div>
-            </Card>
+        <div className="flex items-center gap-3">
+          <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
+            👑
+          </div>
+          <div>
+            <div className="text-lg font-semibold text-yellow-500">Power Champion</div>
+            <div className="text-sm text-zinc-500">Official Title</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div className="flex justify-center md:justify-end">
+      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
+        <img
+          src={championshipBelt}
+          alt="Vanguard Championship Belt"
+          className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+        />
+      </div>
+    </div>
+  </div>
+</Card>
 
             <Card className="p-6">
               <h3 className="text-lg font-bold mb-4">How It Works</h3>
