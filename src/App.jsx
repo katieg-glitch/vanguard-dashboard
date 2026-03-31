@@ -1238,46 +1238,46 @@ export default function App() {
             </div>
 
 <Card className="p-6 overflow-hidden">
-  <div className="grid grid-cols-1 md:grid-cols-[1.15fr_0.85fr] gap-8 items-center">
+  <div className="grid grid-cols-1 md:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
     <div>
-      <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
+      <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
         <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
         Brand Champion Awards
       </h3>
-      <p className="text-sm text-zinc-400 mb-6">
+      <p className="text-base text-zinc-400 mb-6">
         Top sales rep per brand at year end — 3 winners total
       </p>
 
-      <div className="flex flex-wrap gap-6">
+      <div className="flex flex-wrap gap-8">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
+          <div className="w-11 h-11 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
             💰
           </div>
           <div>
-            <div className="text-xl font-bold text-yellow-500">$1,500</div>
-            <div className="text-xs text-zinc-500">Cash per winner</div>
+            <div className="text-2xl font-bold text-yellow-500">$1,500</div>
+            <div className="text-sm text-zinc-500">Cash per winner</div>
           </div>
         </div>
 
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
+          <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
             🏆
           </div>
           <div>
-            <div className="font-semibold">Commemorative Award</div>
-            <div className="text-xs text-zinc-500">Championship Ring</div>
+            <div className="text-lg font-semibold">Commemorative Award</div>
+            <div className="text-sm text-zinc-500">Championship Ring</div>
           </div>
         </div>
       </div>
     </div>
 
     <div className="flex justify-center md:justify-end">
-      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-5 md:p-6 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
+      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
         <img
           src={championshipRing}
           alt="Vanguard Championship Ring"
-          className="relative max-h-[180px] md:max-h-[220px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+          className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
         />
       </div>
     </div>
