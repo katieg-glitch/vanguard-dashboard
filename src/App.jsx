@@ -1237,37 +1237,47 @@ export default function App() {
               </div>
             </div>
 
-            <Card className="p-6">
-              <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
-                <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
-                Brand Champion Awards
-              </h3>
-              <p className="text-sm text-zinc-400 mb-4">
-                Top sales rep per brand at year end — 3 winners total
-              </p>
+<Card className="p-6">
+  <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
+    <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
+    Brand Champion Awards
+  </h3>
+  <p className="text-sm text-zinc-400 mb-6">
+    Top sales rep per brand at year end — 3 winners total
+  </p>
 
-              <div className="flex flex-wrap gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
-                    💰
-                  </div>
-                  <div>
-                    <div className="text-xl font-bold text-yellow-500">$1,500</div>
-                    <div className="text-xs text-zinc-500">Cash per winner</div>
-                  </div>
-                </div>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
+          💰
+        </div>
+        <div>
+          <div className="text-xl font-bold text-yellow-500">$1,500</div>
+          <div className="text-xs text-zinc-500">Cash per winner</div>
+        </div>
+      </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
-                    🏆
-                  </div>
-                  <div>
-                    <div className="font-semibold">Commemorative Award</div>
-                    <div className="text-xs text-zinc-500">Championship Ring</div>
-                  </div>
-                </div>
-              </div>
-            </Card>
+      <div className="flex items-center gap-3">
+        <div className="w-10 h-10 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
+          🏆
+        </div>
+        <div>
+          <div className="font-semibold">Commemorative Award</div>
+          <div className="text-xs text-zinc-500">Championship Ring</div>
+        </div>
+      </div>
+    </div>
+
+    <div className="flex justify-center">
+      <img
+        src={championshipRing}
+        alt="Vanguard Championship Ring"
+        className="max-h-[180px] md:max-h-[220px] w-auto object-contain"
+      />
+    </div>
+  </div>
+</Card>
 
             <Card className="p-6 bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
               <Badge className="mb-2">Grand Prize</Badge>
