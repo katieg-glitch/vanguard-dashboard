@@ -1191,33 +1191,30 @@ export default function App() {
 {tab === 'prizes' && (
   <div className="space-y-6 animate-fade-up pb-12">
     <div className="flex justify-center">
-      <div className="grid grid-cols-2 gap-6 items-center max-w-2xl w-full">
-        <div className="flex justify-center">
-         <div className="flex justify-center">
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-2xl w-full">
-    <div className="flex justify-center md:justify-end">
-      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-        <img
-          src={championshipRing}
-          alt="Vanguard Championship Ring"
-          className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-        />
-      </div>
-    </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-2xl w-full">
+        <div className="flex justify-center md:justify-end">
+          <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
+            <img
+              src={championshipRing}
+              alt="Vanguard Championship Ring"
+              className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+            />
+          </div>
+        </div>
 
-    <div className="flex justify-center md:justify-start">
-      <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-        <img
-          src={championshipBelt}
-          alt="Vanguard Championship Belt"
-          className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-        />
+        <div className="flex justify-center md:justify-start">
+          <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
+            <img
+              src={championshipBelt}
+              alt="Vanguard Championship Belt"
+              className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
+            />
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
     <div className="text-center py-8">
       <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
@@ -1228,23 +1225,23 @@ export default function App() {
       </div>
     </div>
 
-            <div>
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-yellow-500" />
-                Sweepstakes Raffle — Per Brand
-              </h3>
+    <div>
+      <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+        <Trophy className="w-5 h-5 text-yellow-500" />
+        Sweepstakes Raffle — Per Brand
+      </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {BRANDS.map((brand) => (
-                  <Card key={brand} className="text-center p-6">
-                    <div className="text-lg font-bold mb-1">{brand}</div>
-                    <div className="text-3xl font-black text-yellow-500">$7,500</div>
-                    <div className="text-sm text-zinc-400 mt-2">10 winners × $750 each</div>
-                    <div className="text-xs text-zinc-500">Live raffle drawing</div>
-                  </Card>
-                ))}
-              </div>
-            </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {BRANDS.map((brand) => (
+          <Card key={brand} className="text-center p-6">
+            <div className="text-lg font-bold mb-1">{brand}</div>
+            <div className="text-3xl font-black text-yellow-500">$7,500</div>
+            <div className="text-sm text-zinc-400 mt-2">10 winners × $750 each</div>
+            <div className="text-xs text-zinc-500">Live raffle drawing</div>
+          </Card>
+        ))}
+      </div>
+    </div>
 
 <Card className="p-6 overflow-hidden">
   <div className="grid grid-cols-1 md:grid-cols-[1.25fr_0.75fr] gap-8 items-center">
