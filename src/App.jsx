@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import {
   Trophy,
@@ -20,11 +19,10 @@ import championshipBelt from '../Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
-// ─── FIXED: normalized brand matching + tiebreaker sort ───────────────────────
 function normalizeBrand(raw) {
   return String(raw || '')
     .trim()
-    .replace(/\s+/g, ' ')       // collapse internal whitespace
+    .replace(/\s+/g, ' ')
     .toLowerCase()
 }
 
@@ -34,9 +32,6 @@ function aggregateScoreboard(records) {
   records.forEach((r) => {
     const fields = r.fields || {}
 
-    // DEBUG: uncomment during development to verify exact Airtable field names
-    // console.log('record fields:', fields)
-
     const displayName = String(
       fields['Contest Salesperson Name'] ||
         fields['Salesperson Name'] ||
@@ -45,7 +40,6 @@ function aggregateScoreboard(records) {
 
     const dealer = String(fields['Dealer Name'] || '').trim()
 
-    // FIXED: normalized brand value — handles casing, spacing, and field name variants
     const brand = normalizeBrand(
       fields['Contest Brand'] ||
         fields['Brand'] ||
@@ -78,7 +72,6 @@ function aggregateScoreboard(records) {
     map[key].total = map[key].ferris + map[key].scag + map[key].wright
   })
 
-  // FIXED: added tiebreaker — alphabetical by salesperson name when totals are equal
   return Object.values(map).sort((a, b) => {
     if (b.total !== a.total) return b.total - a.total
     return a.salesperson.localeCompare(b.salesperson)
@@ -421,7 +414,6 @@ export default function App() {
     ]
 
     const csvContent = `${headers.join(',')}\n`
-
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const url = window.URL.createObjectURL(blob)
 
@@ -431,7 +423,6 @@ export default function App() {
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-
     window.URL.revokeObjectURL(url)
   }
 
@@ -484,8 +475,6 @@ export default function App() {
     }
   }
 
-  // FIXED: removed redundant re-sort on overallTop3 (scoreboard already sorted),
-  // and added tiebreaker on all brand-specific top lists
   const overallTop3 = useMemo(
     () => scoreboard.slice(0, 3),
     [scoreboard]
@@ -646,6 +635,7 @@ export default function App() {
               </div>
             )}
 
+            {/* Overall Top 3 */}
             <Card>
               <div className="p-6 border-b border-zinc-800">
                 <h2 className="text-lg font-bold flex items-center gap-2">
@@ -667,7 +657,6 @@ export default function App() {
                         <th className="pb-3 w-16">Rank</th>
                         <th className="pb-3">Salesperson</th>
                         <th className="pb-3">Dealership</th>
-                        <th className="pb-3 text-right">Total Units</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -678,7 +667,6 @@ export default function App() {
                           </td>
                           <td className="py-4 font-semibold">{row.salesperson}</td>
                           <td className="py-4 text-zinc-400">{row.dealer}</td>
-                          <td className="py-4 text-right font-bold text-yellow-500">{row.total}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -691,7 +679,10 @@ export default function App() {
               </div>
             </Card>
 
+            {/* Per-Brand Top 10s */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+              {/* Ferris */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -699,7 +690,6 @@ export default function App() {
                     Ferris Top 10
                   </h3>
                 </div>
-
                 <div className="p-4">
                   {loading ? (
                     <TableSkeleton rows={10} />
@@ -709,7 +699,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -728,7 +717,6 @@ export default function App() {
                                 {row.dealer}
                               </div>
                             </td>
-                            <td className="py-2 text-right font-bold text-red-400">{row.ferris}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -741,6 +729,7 @@ export default function App() {
                 </div>
               </Card>
 
+              {/* Wright */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -748,7 +737,6 @@ export default function App() {
                     Wright Top 10
                   </h3>
                 </div>
-
                 <div className="p-4">
                   {loading ? (
                     <TableSkeleton rows={10} />
@@ -758,7 +746,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -777,7 +764,6 @@ export default function App() {
                                 {row.dealer}
                               </div>
                             </td>
-                            <td className="py-2 text-right font-bold text-yellow-400">{row.wright}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -790,6 +776,7 @@ export default function App() {
                 </div>
               </Card>
 
+              {/* Scag */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -797,7 +784,6 @@ export default function App() {
                     Scag Top 10
                   </h3>
                 </div>
-
                 <div className="p-4">
                   {loading ? (
                     <TableSkeleton rows={10} />
@@ -807,7 +793,6 @@ export default function App() {
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
-                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -826,7 +811,6 @@ export default function App() {
                                 {row.dealer}
                               </div>
                             </td>
-                            <td className="py-2 text-right font-bold text-orange-400">{row.scag}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -838,6 +822,7 @@ export default function App() {
                   )}
                 </div>
               </Card>
+
             </div>
 
             <p className="text-center text-xs text-zinc-500">
@@ -943,477 +928,3 @@ export default function App() {
                           className={`flex-1 py-3 px-4 rounded-lg font-semibold text-sm transition-all ${
                             formData.brand === b
                               ? 'bg-yellow-500 text-black shadow-lg'
-                              : 'bg-zinc-800 border border-zinc-700 text-zinc-400 hover:text-white hover:border-yellow-500/50'
-                          }`}
-                        >
-                          {b}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="border-t border-zinc-800 pt-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div>
-                        <h3 className="font-semibold">Unit Sales</h3>
-                        <p className="text-xs text-zinc-500">
-                          Add each unit with date and serial number
-                        </p>
-                      </div>
-
-                      <button
-                        onClick={addEntry}
-                        className="flex items-center gap-2 px-4 py-2 bg-yellow-500/10 border border-yellow-500/30 rounded-lg text-yellow-500 text-sm font-medium hover:bg-yellow-500/20"
-                      >
-                        <Plus className="w-4 h-4" />
-                        Add Unit
-                      </button>
-                    </div>
-
-                    <div className="space-y-3">
-                      {formData.entries.map((entry, i) => (
-                        <div key={i} className="flex gap-3 items-end">
-                          <div className="flex-1">
-                            {i === 0 && (
-                              <label className="block text-xs text-zinc-500 mb-1">
-                                Date Sold
-                              </label>
-                            )}
-                            <input
-                              type="date"
-                              value={entry.dateSold}
-                              onChange={(e) => updateEntry(i, 'dateSold', e.target.value)}
-                              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
-                            />
-                          </div>
-
-                          <div className="flex-[1.5]">
-                            {i === 0 && (
-                              <label className="block text-xs text-zinc-500 mb-1">
-                                Serial Number
-                              </label>
-                            )}
-                            <input
-                              type="text"
-                              placeholder="e.g. VG-2026-XXXXX"
-                              value={entry.serialNumber}
-                              onChange={(e) =>
-                                updateEntry(i, 'serialNumber', e.target.value)
-                              }
-                              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
-                            />
-                          </div>
-
-                          {formData.entries.length > 1 && (
-                            <button
-                              onClick={() => removeEntry(i)}
-                              className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 hover:bg-red-500/20"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="text-xs text-zinc-500 mt-2">
-                      {formData.entries.length} unit{formData.entries.length !== 1 ? 's' : ''} — each
-                      creates a separate record
-                    </p>
-                  </div>
-
-                  <div className="bg-yellow-500/5 border border-yellow-500/20 rounded-lg p-4">
-                    <div className="flex gap-3">
-                      <AlertTriangle className="w-5 h-5 text-yellow-500 flex-shrink-0 mt-0.5" />
-                      <p className="text-xs text-yellow-500/80">
-                        <strong className="text-yellow-500">Disclaimer:</strong> Documentation for
-                        all sales, including invoices and equipment registrations, will be required
-                        in order to claim any reward.
-                      </p>
-                    </div>
-                  </div>
-
-                  {submitMessage && (
-                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 text-red-400 text-sm">
-                      {submitMessage}
-                    </div>
-                  )}
-
-                  <button
-                    onClick={handleSubmit}
-                    disabled={
-                      submitting ||
-                      !formData.dealerName ||
-                      !formData.salesperson ||
-                      !formData.brand
-                    }
-                    className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    {submitting ? 'Submitting...' : 'Submit Sales Entries'}
-                  </button>
-                </div>
-              </Card>
-            )}
-          </div>
-        )}
-
-        {tab === 'upload' && (
-          <div className="max-w-2xl mx-auto animate-fade-up pb-12">
-            <Card>
-              <div className="p-6 border-b border-zinc-800">
-                <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
-                <p className="text-sm text-zinc-500 mb-4">
-                  Upload a CSV of existing qualified records to push them in batch.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={downloadCsvTemplate}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
-                >
-                  Download CSV Template
-                </button>
-              </div>
-
-              <div className="p-6 space-y-6">
-                <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
-                  <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
-                    Expected CSV Columns
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    {[
-                      'Dealer #',
-                      'Dealer Name',
-                      'Salesperson Name',
-                      'Email',
-                      'Brand',
-                      'Date Sold',
-                      'Serial Number',
-                    ].map((col) => (
-                      <Badge key={col} variant="outline" className="text-xs">
-                        {col}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <p className="text-xs text-zinc-500 mt-3">
-                    Column headers are matched flexibly — "Salesperson Name", "salesperson", or
-                    "Rep" all work.
-                  </p>
-                </div>
-
-                <input
-                  ref={fileRef}
-                  type="file"
-                  accept=".csv"
-                  onChange={handleFileSelect}
-                  className="hidden"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => fileRef.current?.click()}
-                  className="w-full py-10 border-2 border-dashed border-zinc-700 rounded-lg cursor-pointer text-zinc-400 hover:border-yellow-500 hover:text-yellow-500 transition-colors flex flex-col items-center gap-2"
-                >
-                  <Upload className="w-6 h-6" />
-                  <span className="font-medium">{csvFileName || 'Click to select CSV file'}</span>
-                </button>
-
-                {csvData.length > 0 && (
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-semibold">Preview ({csvData.length} records)</h3>
-
-                      <button
-                        onClick={() => {
-                          setCsvData([])
-                          setCsvFileName('')
-                        }}
-                        className="px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm hover:bg-zinc-700"
-                      >
-                        Clear
-                      </button>
-                    </div>
-
-                    <div className="border border-zinc-700 rounded-lg overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead className="bg-zinc-800">
-                          <tr>
-                            {Object.keys(csvData[0]).map((h) => (
-                              <th
-                                key={h}
-                                className="px-3 py-2 text-left text-xs text-zinc-400 font-medium"
-                              >
-                                {h}
-                              </th>
-                            ))}
-                          </tr>
-                        </thead>
-
-                        <tbody>
-                          {csvData.slice(0, 5).map((row, i) => (
-                            <tr key={i} className="border-t border-zinc-800">
-                              {Object.values(row).map((v, j) => (
-                                <td key={j} className="px-3 py-2 text-xs">
-                                  {String(v)}
-                                </td>
-                              ))}
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-
-                      {csvData.length > 5 && (
-                        <div className="text-center text-xs text-zinc-500 py-2 border-t border-zinc-800">
-                          ...and {csvData.length - 5} more rows
-                        </div>
-                      )}
-                    </div>
-
-                    <button
-                      onClick={handleBulkUpload}
-                      disabled={uploading}
-                      className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 text-black font-bold rounded-lg transition-colors disabled:opacity-50"
-                    >
-                      {uploading
-                        ? `Uploading ${csvData.length} records...`
-                        : `Push ${csvData.length} Records`}
-                    </button>
-                  </div>
-                )}
-
-                {uploadResult && (
-                  <div
-                    className={`p-4 rounded-lg ${
-                      uploadResult.success
-                        ? 'bg-green-500/10 border border-green-500/30'
-                        : 'bg-red-500/10 border border-red-500/30'
-                    }`}
-                  >
-                    {uploadResult.success ? (
-                      <p className="text-green-500 font-medium flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5" />
-                        Successfully uploaded {uploadResult.count} records!
-                      </p>
-                    ) : (
-                      <p className="text-red-400 font-medium">
-                        Upload failed: {uploadResult.error}
-                      </p>
-                    )}
-                  </div>
-                )}
-              </div>
-            </Card>
-          </div>
-        )}
-
-        {tab === 'prizes' && (
-          <div className="space-y-6 animate-fade-up pb-12">
-            <div className="flex justify-center">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-2xl w-full">
-                <div className="flex justify-center md:justify-end">
-                  <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-                    <img
-                      src={championshipRing}
-                      alt="Vanguard Championship Ring"
-                      className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                    />
-                  </div>
-                </div>
-
-                <div className="flex justify-center md:justify-start">
-                  <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-                    <img
-                      src={championshipBelt}
-                      alt="Vanguard Championship Belt"
-                      className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="text-center py-8">
-              <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
-                Total Rewards
-              </div>
-              <div className="text-5xl md:text-6xl font-black bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent">
-                $30,000
-              </div>
-            </div>
-
-            <div>
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-yellow-500" />
-                Sweepstakes Raffle — Per Brand
-              </h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {BRANDS.map((brand) => (
-                  <Card key={brand} className="text-center p-6">
-                    <div className="text-lg font-bold mb-1">{brand}</div>
-                    <div className="text-3xl font-black text-yellow-500">$7,500</div>
-                    <div className="text-sm text-zinc-400 mt-2">10 winners × $750 each</div>
-                    <div className="text-xs text-zinc-500">Live raffle drawing</div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            <Card className="p-6 overflow-hidden">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
-                    <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
-                    Brand Champion Awards
-                  </h3>
-                  <p className="text-base text-zinc-400 mb-6">
-                    Top sales rep per brand at year end — 3 winners total
-                  </p>
-
-                  <div className="flex flex-wrap gap-8">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
-                        💰
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-yellow-500">$1,500</div>
-                        <div className="text-sm text-zinc-500">Cash per winner</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
-                        🏆
-                      </div>
-                      <div>
-                        <div className="text-lg font-semibold">Commemorative Award</div>
-                        <div className="text-sm text-zinc-500">Championship Ring</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6 overflow-hidden bg-gradient-to-br from-yellow-500/10 via-yellow-500/5 to-transparent border-yellow-500/30">
-              <div className="space-y-6">
-                <div>
-                  <Badge className="mb-3">Grand Prize</Badge>
-                  <h3 className="text-xl md:text-2xl font-bold text-yellow-500 mb-2">
-                    2026 Pace Vanguard Power Champion
-                  </h3>
-                  <p className="text-base text-zinc-400 mb-6">
-                    Highest total Vanguard unit sales across all brands
-                  </p>
-
-                  <div className="flex flex-wrap gap-8">
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-lg bg-yellow-500 flex items-center justify-center text-xl">
-                        💵
-                      </div>
-                      <div>
-                        <div className="text-2xl font-bold text-yellow-500">$3,000</div>
-                        <div className="text-sm text-zinc-500">Cash Award</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
-                        🥊
-                      </div>
-                      <div>
-                        <div className="text-lg font-semibold text-yellow-500">Championship Belt</div>
-                        <div className="text-sm text-zinc-500">Custom Exclusive</div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-lg bg-zinc-800 border border-zinc-700 flex items-center justify-center text-xl">
-                        👑
-                      </div>
-                      <div>
-                        <div className="text-lg font-semibold text-yellow-500">Power Champion</div>
-                        <div className="text-sm text-zinc-500">Official Title</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">How It Works</h3>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {[
-                  {
-                    step: '01',
-                    title: 'Sell 5+ Vanguard-powered units',
-                    desc: 'Any combo of Ferris, Scag, and Wright mowers qualifies you.',
-                  },
-                  {
-                    step: '02',
-                    title: 'Every unit = 1 entry',
-                    desc: 'No cap. More sales, better odds.',
-                  },
-                  {
-                    step: '03',
-                    title: 'Submit via this portal',
-                    desc: 'Enter serial numbers and sale dates. Each record is tracked separately.',
-                  },
-                  {
-                    step: '04',
-                    title: 'Win in the live raffle',
-                    desc: '10 winners per brand at $750 each. Brand Champions and Overall Champion named at year end.',
-                  },
-                ].map((s, i) => (
-                  <div
-                    key={i}
-                    className="rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5"
-                  >
-                    <div className="text-xs font-bold tracking-[0.2em] text-yellow-500 mb-2">
-                      {s.step}
-                    </div>
-                    <h4 className="text-lg font-semibold mb-2">{s.title}</h4>
-                    <p className="text-sm text-zinc-400">{s.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <h3 className="text-lg font-bold mb-4">Program Notes</h3>
-              <ul className="space-y-2 text-sm text-zinc-400">
-                <li>• Sales must be submitted with valid serial numbers.</li>
-                <li>• Documentation may be required before any payout is issued.</li>
-                <li>• Leaderboard rankings update automatically.</li>
-                <li>• Final prize decisions are subject to program verification.</li>
-                <li>• Any participant awarded a Top Salesperson prize will be excluded from the $750 raffle drawing.</li>
-                <li>• If you apply for SPIFFs, you will automatically be entered into the sweepstakes.</li>
-                <li>• The same contestant can win the championship ring & belt but will be removed from the drawing.</li>
-                <li>• Only dealers who are qualified with 5+ Vanguard unit sales will be entered into the sweepstakes.</li>
-              </ul>
-            </Card>
-          </div>
-        )}
-
-        <footer className="py-10 border-t border-zinc-900 text-center">
-          <div className="flex justify-center mb-4">
-            <img
-              src={paceLogo}
-              alt="Pace"
-              className="h-8 md:h-10 w-auto opacity-90"
-            />
-          </div>
-          <p className="text-xs text-zinc-500">
-            Powered by Pace. Vanguard Sweepstakes Portal.
-          </p>
-        </footer>
-      </div>
-    </div>
-  )
-}
