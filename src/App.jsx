@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import {
   Trophy,
@@ -19,11 +20,22 @@ import championshipBelt from '../Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
+// ─── FIXED: normalized brand matching + tiebreaker sort ───────────────────────
+function normalizeBrand(raw) {
+  return String(raw || '')
+    .trim()
+    .replace(/\s+/g, ' ')       // collapse internal whitespace
+    .toLowerCase()
+}
+
 function aggregateScoreboard(records) {
   const map = {}
 
   records.forEach((r) => {
     const fields = r.fields || {}
+
+    // DEBUG: uncomment during development to verify exact Airtable field names
+    // console.log('record fields:', fields)
 
     const displayName = String(
       fields['Contest Salesperson Name'] ||
@@ -33,13 +45,12 @@ function aggregateScoreboard(records) {
 
     const dealer = String(fields['Dealer Name'] || '').trim()
 
-    const brand = String(
+    // FIXED: normalized brand value — handles casing, spacing, and field name variants
+    const brand = normalizeBrand(
       fields['Contest Brand'] ||
         fields['Brand'] ||
         ''
     )
-      .trim()
-      .toLowerCase()
 
     if (!displayName) return
 
@@ -67,7 +78,11 @@ function aggregateScoreboard(records) {
     map[key].total = map[key].ferris + map[key].scag + map[key].wright
   })
 
-  return Object.values(map).sort((a, b) => b.total - a.total)
+  // FIXED: added tiebreaker — alphabetical by salesperson name when totals are equal
+  return Object.values(map).sort((a, b) => {
+    if (b.total !== a.total) return b.total - a.total
+    return a.salesperson.localeCompare(b.salesperson)
+  })
 }
 
 function parseCSV(text) {
@@ -469,41 +484,43 @@ export default function App() {
     }
   }
 
-const overallTop3 = useMemo(
-  () => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
-  [scoreboard]
-)
+  // FIXED: removed redundant re-sort on overallTop3 (scoreboard already sorted),
+  // and added tiebreaker on all brand-specific top lists
+  const overallTop3 = useMemo(
+    () => scoreboard.slice(0, 3),
+    [scoreboard]
+  )
 
-const ferrisTop10 = useMemo(
-  () =>
-    [...scoreboard]
-      .filter((r) => r.ferris > 0)
-      .sort((a, b) => b.ferris - a.ferris)
-      .slice(0, 10),
-  [scoreboard]
-)
+  const ferrisTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.ferris > 0)
+        .sort((a, b) => b.ferris - a.ferris || a.salesperson.localeCompare(b.salesperson))
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const wrightTop10 = useMemo(
-  () =>
-    [...scoreboard]
-      .filter((r) => r.wright > 0)
-      .sort((a, b) => b.wright - a.wright)
-      .slice(0, 10),
-  [scoreboard]
-)
+  const wrightTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.wright > 0)
+        .sort((a, b) => b.wright - a.wright || a.salesperson.localeCompare(b.salesperson))
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const scagTop10 = useMemo(
-  () =>
-    [...scoreboard]
-      .filter((r) => r.scag > 0)
-      .sort((a, b) => b.scag - a.scag)
-      .slice(0, 10),
-  [scoreboard]
-)
+  const scagTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.scag > 0)
+        .sort((a, b) => b.scag - a.scag || a.salesperson.localeCompare(b.salesperson))
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const rankedReps = scoreboard.length
-const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
-const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size 
+  const rankedReps = scoreboard.length
+  const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
+  const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
@@ -650,6 +667,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                         <th className="pb-3 w-16">Rank</th>
                         <th className="pb-3">Salesperson</th>
                         <th className="pb-3">Dealership</th>
+                        <th className="pb-3 text-right">Total Units</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -660,6 +678,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                           </td>
                           <td className="py-4 font-semibold">{row.salesperson}</td>
                           <td className="py-4 text-zinc-400">{row.dealer}</td>
+                          <td className="py-4 text-right font-bold text-yellow-500">{row.total}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -690,6 +709,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
+                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -708,6 +728,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                                 {row.dealer}
                               </div>
                             </td>
+                            <td className="py-2 text-right font-bold text-red-400">{row.ferris}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -737,6 +758,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
+                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -755,6 +777,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                                 {row.dealer}
                               </div>
                             </td>
+                            <td className="py-2 text-right font-bold text-yellow-400">{row.wright}</td>
                           </tr>
                         ))}
                       </tbody>
@@ -784,6 +807,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                         <tr className="text-left text-xs text-zinc-500 uppercase">
                           <th className="pb-2 w-10">#</th>
                           <th className="pb-2">Salesperson</th>
+                          <th className="pb-2 text-right">Units</th>
                         </tr>
                       </thead>
                       <tbody>
@@ -802,6 +826,7 @@ const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).s
                                 {row.dealer}
                               </div>
                             </td>
+                            <td className="py-2 text-right font-bold text-orange-400">{row.scag}</td>
                           </tr>
                         ))}
                       </tbody>
