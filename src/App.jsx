@@ -469,41 +469,56 @@ export default function App() {
     }
   }
 
-  const overallTop3 = useMemo(
-    () => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
-    [scoreboard]
-  )
+const overallTop3 = useMemo(
+  () =>
+    [...scoreboard]
+      .sort((a, b) => {
+        if (b.total !== a.total) return b.total - a.total
+        return a.salesperson.localeCompare(b.salesperson)
+      })
+      .slice(0, 3),
+  [scoreboard]
+)
 
-  const ferrisTop10 = useMemo(
-    () =>
-      [...scoreboard]
-        .filter((r) => r.ferris > 0)
-        .sort((a, b) => b.ferris - a.ferris)
-        .slice(0, 10),
-    [scoreboard]
-  )
+const ferrisTop10 = useMemo(
+  () =>
+    [...scoreboard]
+      .filter((r) => r.ferris > 0)
+      .sort((a, b) => {
+        if (b.ferris !== a.ferris) return b.ferris - a.ferris
+        return a.salesperson.localeCompare(b.salesperson)
+      })
+      .slice(0, 10),
+  [scoreboard]
+)
 
-  const wrightTop10 = useMemo(
-    () =>
-      [...scoreboard]
-        .filter((r) => r.wright > 0)
-        .sort((a, b) => b.wright - a.wright)
-        .slice(0, 10),
-    [scoreboard]
-  )
+const wrightTop10 = useMemo(
+  () =>
+    [...scoreboard]
+      .filter((r) => r.wright > 0)
+      .sort((a, b) => {
+        if (b.wright !== a.wright) return b.wright - a.wright
+        return a.salesperson.localeCompare(b.salesperson)
+      })
+      .slice(0, 10),
+  [scoreboard]
+)
 
-  const scagTop10 = useMemo(
-    () =>
-      [...scoreboard]
-        .filter((r) => r.scag > 0)
-        .sort((a, b) => b.scag - a.scag)
-        .slice(0, 10),
-    [scoreboard]
-  )
+const scagTop10 = useMemo(
+  () =>
+    [...scoreboard]
+      .filter((r) => r.scag > 0)
+      .sort((a, b) => {
+        if (b.scag !== a.scag) return b.scag - a.scag
+        return a.salesperson.localeCompare(b.salesperson)
+      })
+      .slice(0, 10),
+  [scoreboard]
+)
 
-  const rankedReps = scoreboard.length
-  const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
-  const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
+const rankedReps = scoreboard.length
+const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
+const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
