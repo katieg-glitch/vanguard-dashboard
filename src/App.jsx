@@ -469,44 +469,41 @@ export default function App() {
     }
   }
 
- const overallTop3 = useMemo(
-  () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
-  [eligibleScoreboard]
-)
+  const overallTop3 = useMemo(
+    () => [...scoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+    [scoreboard]
+  )
 
-const ferrisTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.ferris > 0)
-      .sort((a, b) => b.ferris - a.ferris)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
+  const ferrisTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.ferris > 0)
+        .sort((a, b) => b.ferris - a.ferris)
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const wrightTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.wright > 0)
-      .sort((a, b) => b.wright - a.wright)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
+  const wrightTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.wright > 0)
+        .sort((a, b) => b.wright - a.wright)
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const scagTop10 = useMemo(
-  () =>
-    [...eligibleScoreboard]
-      .filter((r) => r.scag > 0)
-      .sort((a, b) => b.scag - a.scag)
-      .slice(0, 10),
-  [eligibleScoreboard]
-)
+  const scagTop10 = useMemo(
+    () =>
+      [...scoreboard]
+        .filter((r) => r.scag > 0)
+        .sort((a, b) => b.scag - a.scag)
+        .slice(0, 10),
+    [scoreboard]
+  )
 
-const rankedReps = eligibleScoreboard.length
-const qualifiedReps = eligibleScoreboard.length
-const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
-  const rankedReps = eligibleScoreboard.length
-  const qualifiedReps = eligibleScoreboard.length
-  const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
+  const rankedReps = scoreboard.length
+  const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
+  const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
@@ -583,7 +580,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
           <div className="space-y-8 animate-fade-up pb-12">
             <PrizeShowcase
               title="Championship Ring + Belt"
-              subtitle="Sell 5+ qualified units to appear on the scoreboard and compete for the year-end title."
+              subtitle="Compete for the year-end title."
             />
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -639,7 +636,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                   Overall Top 3
                 </h2>
                 <p className="text-sm text-zinc-500">
-                  Top qualified salespeople with 5+ Vanguard-powered unit sales
+                  Top salespeople across all Vanguard-powered unit sales
                 </p>
               </div>
 
@@ -669,7 +666,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                   </table>
                 ) : (
                   <p className="text-sm text-zinc-500 py-6 text-center">
-                    No qualified contestants yet.
+                    No submissions yet.
                   </p>
                 )}
               </div>
@@ -717,7 +714,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </table>
                   ) : (
                     <p className="text-sm text-zinc-500 py-6 text-center">
-                      No Ferris-qualified contestants yet.
+                      No Ferris submissions yet.
                     </p>
                   )}
                 </div>
@@ -764,7 +761,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </table>
                   ) : (
                     <p className="text-sm text-zinc-500 py-6 text-center">
-                      No Wright-qualified contestants yet.
+                      No Wright submissions yet.
                     </p>
                   )}
                 </div>
@@ -811,7 +808,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </table>
                   ) : (
                     <p className="text-sm text-zinc-500 py-6 text-center">
-                      No Scag-qualified contestants yet.
+                      No Scag submissions yet.
                     </p>
                   )}
                 </div>
@@ -1242,7 +1239,7 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
             </div>
 
             <Card className="p-6 overflow-hidden">
-             <div className="space-y-6">
+              <div className="space-y-6">
                 <div>
                   <h3 className="text-xl font-bold flex items-center gap-2 mb-3">
                     <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
@@ -1274,8 +1271,6 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </div>
                   </div>
                 </div>
-
-
               </div>
             </Card>
 
@@ -1322,7 +1317,6 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                     </div>
                   </div>
                 </div>
-
               </div>
             </Card>
 
