@@ -518,7 +518,7 @@ const scagTop10 = useMemo(
 
 const rankedReps = scoreboard.length
 const qualifiedReps = scoreboard.filter((r) => r.total >= 5).length
-const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size
+const activeDealers = new Set(scoreboard.map((r) => r.dealer).filter(Boolean)).size 
 
   return (
     <div className="min-h-screen relative overflow-hidden bg-black text-white">
