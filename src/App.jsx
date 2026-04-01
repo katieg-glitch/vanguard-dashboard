@@ -1373,14 +1373,10 @@ const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boo
                 <li>• Documentation may be required before any payout is issued.</li>
                 <li>• Leaderboard rankings update automatically.</li>
                 <li>• Final prize decisions are subject to program verification.</li>
-                <li>
-                  • Any participant awarded a Top Salesperson prize will be excluded from the
-                  $750 raffle drawing.
-                </li>
-                <li>
-                  • If you apply for SPIFFs, you will automatically be entered into the
-                  sweepstakes.
-                </li>
+                <li>• Any participant awarded a Top Salesperson prize will be excluded from the $750 raffle drawing.</li>
+                <li>• If you apply for SPIFFs, you will automatically be entered into the sweepstakes.</li>
+                <li>• The same contestant can win the championship ring & belt but will be removed from the drawing.</li>
+                <li>• Only dealers who are qualified with 5+ Vanguard unit sales will be entered into the sweepstakes.</li>
               </ul>
             </Card>
           </div>
