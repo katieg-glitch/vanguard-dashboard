@@ -469,43 +469,41 @@ export default function App() {
     }
   }
 
-  const eligibleScoreboard = useMemo(
-    () => scoreboard.filter((r) => r.total >= 5),
-    [scoreboard]
-  )
+ const overallTop3 = useMemo(
+  () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
+  [eligibleScoreboard]
+)
 
-  const overallTop3 = useMemo(
-    () => [...eligibleScoreboard].sort((a, b) => b.total - a.total).slice(0, 3),
-    [eligibleScoreboard]
-  )
+const ferrisTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.ferris > 0)
+      .sort((a, b) => b.ferris - a.ferris)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
 
-  const ferrisTop10 = useMemo(
-    () =>
-      [...eligibleScoreboard]
-        .filter((r) => r.ferris > 0)
-        .sort((a, b) => b.ferris - a.ferris)
-        .slice(0, 10),
-    [eligibleScoreboard]
-  )
+const wrightTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.wright > 0)
+      .sort((a, b) => b.wright - a.wright)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
 
-  const wrightTop10 = useMemo(
-    () =>
-      [...eligibleScoreboard]
-        .filter((r) => r.wright > 0)
-        .sort((a, b) => b.wright - a.wright)
-        .slice(0, 10),
-    [eligibleScoreboard]
-  )
+const scagTop10 = useMemo(
+  () =>
+    [...eligibleScoreboard]
+      .filter((r) => r.scag > 0)
+      .sort((a, b) => b.scag - a.scag)
+      .slice(0, 10),
+  [eligibleScoreboard]
+)
 
-  const scagTop10 = useMemo(
-    () =>
-      [...eligibleScoreboard]
-        .filter((r) => r.scag > 0)
-        .sort((a, b) => b.scag - a.scag)
-        .slice(0, 10),
-    [eligibleScoreboard]
-  )
-
+const rankedReps = eligibleScoreboard.length
+const qualifiedReps = eligibleScoreboard.length
+const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
   const rankedReps = eligibleScoreboard.length
   const qualifiedReps = eligibleScoreboard.length
   const activeDealers = new Set(eligibleScoreboard.map((r) => r.dealer).filter(Boolean)).size
