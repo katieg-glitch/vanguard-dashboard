@@ -1014,9 +1014,9 @@ export default function App() {
   >
     Download CSV Template
   </button>
-  <p className="text-xs text-zinc-500 mt-3">
+  <h2 className="text-xl font-bold text-yellow-500">
     • If you apply for SPIFFs, you will automatically be entered into the sweepstakes and do not need to re-enter.
-  </p>
+  </h2>
 </div>
 
               <div className="p-6 space-y-6">
