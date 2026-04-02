@@ -1014,6 +1014,19 @@ export default function App() {
                 >
                   Download CSV Template
                 </button>
+                <div className="p-6 border-b border-zinc-800">
+  <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
+  <p className="text-sm text-zinc-500 mb-4">
+    Upload a CSV of existing qualified records to push them in batch.
+  </p>
+  <button
+    type="button"
+    onClick={downloadCsvTemplate}
+    className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
+  >
+    Download CSV Template
+  </button>
+</div>
               </div>
 
               <div className="p-6 space-y-6">
