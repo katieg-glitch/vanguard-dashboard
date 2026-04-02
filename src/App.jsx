@@ -1004,7 +1004,7 @@ export default function App() {
             <Card>
                <div className="p-6 border-b border-zinc-800">
   <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
-  <p className="text-sm text-zinc-500 mb-4">
+  <p className="text-sm text-zinc-500 mt-3">
     Upload a CSV of existing qualified records to push them in batch.
   </p>
   <button
@@ -1328,6 +1328,7 @@ export default function App() {
                 <li>• If you apply for SPIFFs, you will automatically be entered into the sweepstakes.</li>
                 <li>• The same contestant can win the championship ring & belt but will be removed from the drawing.</li>
                 <li>• Only dealers who are qualified with 5+ Vanguard unit sales will be entered into the sweepstakes.</li>
+                <li>• You can only win once in the drawing. No Repeat Winnerss. </li>
               </ul>
             </Card>
           </div>
