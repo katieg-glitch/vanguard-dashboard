@@ -1002,7 +1002,7 @@ export default function App() {
         {tab === 'upload' && (
           <div className="max-w-2xl mx-auto animate-fade-up pb-12">
             <Card>
-                <div className="p-6 border-b border-zinc-800">
+               <div className="p-6 border-b border-zinc-800">
   <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
   <p className="text-sm text-zinc-500 mb-4">
     Upload a CSV of existing qualified records to push them in batch.
@@ -1014,6 +1014,9 @@ export default function App() {
   >
     Download CSV Template
   </button>
+  <p className="text-xs text-zinc-500 mt-3">
+    • If you apply for SPIFFs, you will automatically be entered into the sweepstakes and do not need to re-enter.
+  </p>
 </div>
               </div>
 
