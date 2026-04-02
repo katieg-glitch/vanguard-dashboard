@@ -1018,7 +1018,6 @@ export default function App() {
     • If you apply for SPIFFs, you will automatically be entered into the sweepstakes and do not need to re-enter.
   </p>
 </div>
-              </div>
 
               <div className="p-6 space-y-6">
                 <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
