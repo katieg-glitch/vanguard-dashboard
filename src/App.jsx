@@ -239,13 +239,14 @@ export default function App() {
   const [error, setError] = useState('')
   const [useDemo, setUseDemo] = useState(false)
 
+  // ── CHANGE 1: added modelNumber to formData initial state ──
   const [formData, setFormData] = useState({
     dealerName: '',
     dealerNumber: '',
     salesperson: '',
     email: '',
     brand: '',
-    entries: [{ dateSold: '', serialNumber: '' }],
+    entries: [{ dateSold: '', serialNumber: '', modelNumber: '' }],
   })
 
   const [submitting, setSubmitting] = useState(false)
@@ -297,7 +298,8 @@ export default function App() {
   const addEntry = () => {
     setFormData((p) => ({
       ...p,
-      entries: [...p.entries, { dateSold: '', serialNumber: '' }],
+      // ── CHANGE 2: new entries include modelNumber ──
+      entries: [...p.entries, { dateSold: '', serialNumber: '', modelNumber: '' }],
     }))
   }
 
@@ -333,6 +335,8 @@ export default function App() {
           email: formData.email,
           brand: formData.brand,
           serialNumber: e.serialNumber,
+          // ── CHANGE 3: include modelNumber in each submitted record ──
+          modelNumber: e.modelNumber,
           dateSold: e.dateSold,
         }))
       if (!records.length) {
@@ -352,13 +356,14 @@ export default function App() {
       setSubmitted(true)
       setTimeout(() => {
         setSubmitted(false)
+        // ── CHANGE 4: reset includes modelNumber in entries ──
         setFormData({
           dealerName: '',
           dealerNumber: '',
           salesperson: '',
           email: '',
           brand: '',
-          entries: [{ dateSold: '', serialNumber: '' }],
+          entries: [{ dateSold: '', serialNumber: '', modelNumber: '' }],
         })
         refreshScoreboard(true)
       }, 2000)
@@ -380,6 +385,7 @@ export default function App() {
     reader.readAsText(file)
   }
 
+  // ── CHANGE 5: added Model Number to CSV template headers ──
   const downloadCsvTemplate = () => {
     const headers = [
       'Dealer #',
@@ -387,6 +393,7 @@ export default function App() {
       'Salesperson Name',
       'Email',
       'Brand',
+      'Model Number',
       'Date Sold',
       'Serial Number',
     ]
@@ -424,6 +431,8 @@ export default function App() {
         salespersonName: find(row, ['salespersonname', 'salesperson name', 'salesperson', 'rep', 'repname']),
         email: find(row, ['email', 'emailaddress']),
         brand: find(row, ['brand']),
+        // ── CHANGE 6: map modelNumber from CSV ──
+        modelNumber: find(row, ['modelnumber', 'model number', 'model', 'model#']),
         dateSold: find(row, ['datesold', 'date sold', 'date', 'saledate']),
       }))
       for (const record of records) {
@@ -901,7 +910,7 @@ export default function App() {
                       <div>
                         <h3 className="font-semibold">Unit Sales</h3>
                         <p className="text-xs text-zinc-500">
-                          Add each unit with date and serial number
+                          Add each unit with date, model number, and serial number
                         </p>
                       </div>
                       <button
@@ -913,46 +922,69 @@ export default function App() {
                       </button>
                     </div>
 
+                    {/* ── CHANGE 7: per-entry row now includes Model Number field ── */}
                     <div className="space-y-3">
                       {formData.entries.map((entry, i) => (
-                        <div key={i} className="flex gap-3 items-end">
-                          <div className="flex-1">
-                            {i === 0 && (
-                              <label className="block text-xs text-zinc-500 mb-1">
-                                Date Sold
-                              </label>
-                            )}
-                            <input
-                              type="date"
-                              value={entry.dateSold}
-                              onChange={(e) => updateEntry(i, 'dateSold', e.target.value)}
-                              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
-                            />
+                        <div key={i} className="space-y-2">
+                          {/* Row 1: Date Sold + Model Number */}
+                          <div className="flex gap-3 items-end">
+                            <div className="flex-1">
+                              {i === 0 && (
+                                <label className="block text-xs text-zinc-500 mb-1">
+                                  Date Sold
+                                </label>
+                              )}
+                              <input
+                                type="date"
+                                value={entry.dateSold}
+                                onChange={(e) => updateEntry(i, 'dateSold', e.target.value)}
+                                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white focus:outline-none focus:border-yellow-500"
+                              />
+                            </div>
+                            <div className="flex-1">
+                              {i === 0 && (
+                                <label className="block text-xs text-zinc-500 mb-1">
+                                  Model Number
+                                </label>
+                              )}
+                              <input
+                                type="text"
+                                placeholder="e.g. IS700Z"
+                                value={entry.modelNumber}
+                                onChange={(e) =>
+                                  updateEntry(i, 'modelNumber', e.target.value)
+                                }
+                                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
+                              />
+                            </div>
                           </div>
-                          <div className="flex-[1.5]">
-                            {i === 0 && (
-                              <label className="block text-xs text-zinc-500 mb-1">
-                                Serial Number
-                              </label>
+                          {/* Row 2: Serial Number + Delete */}
+                          <div className="flex gap-3 items-end">
+                            <div className="flex-[2]">
+                              {i === 0 && (
+                                <label className="block text-xs text-zinc-500 mb-1">
+                                  Serial Number
+                                </label>
+                              )}
+                              <input
+                                type="text"
+                                placeholder="e.g. VG-2026-XXXXX"
+                                value={entry.serialNumber}
+                                onChange={(e) =>
+                                  updateEntry(i, 'serialNumber', e.target.value)
+                                }
+                                className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
+                              />
+                            </div>
+                            {formData.entries.length > 1 && (
+                              <button
+                                onClick={() => removeEntry(i)}
+                                className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 hover:bg-red-500/20"
+                              >
+                                <Trash2 className="w-4 h-4" />
+                              </button>
                             )}
-                            <input
-                              type="text"
-                              placeholder="e.g. VG-2026-XXXXX"
-                              value={entry.serialNumber}
-                              onChange={(e) =>
-                                updateEntry(i, 'serialNumber', e.target.value)
-                              }
-                              className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-lg text-white placeholder-zinc-500 focus:outline-none focus:border-yellow-500"
-                            />
                           </div>
-                          {formData.entries.length > 1 && (
-                            <button
-                              onClick={() => removeEntry(i)}
-                              className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-500 hover:bg-red-500/20"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
                         </div>
                       ))}
                     </div>
@@ -1002,24 +1034,25 @@ export default function App() {
         {tab === 'upload' && (
           <div className="max-w-2xl mx-auto animate-fade-up pb-12">
             <Card>
-               <div className="p-6 border-b border-zinc-800">
-  <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
-  <p className="text-sm text-zinc-500 mt-3">
-    Upload a CSV of existing qualified records to push them in batch.
-  </p>
-  <button
-    type="button"
-    onClick={downloadCsvTemplate}
-    className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
-  >
-    Download CSV Template
-  </button>
-  <h2 className="text-xl font-bold text-yellow-500">
-    • If you apply for SPIFFs, you will automatically be entered into the sweepstakes and do not need to re-enter.
-  </h2>
-</div>
+              <div className="p-6 border-b border-zinc-800">
+                <h2 className="text-xl font-bold text-yellow-500">Bulk Import SPIFFs</h2>
+                <p className="text-sm text-zinc-500 mt-3">
+                  Upload a CSV of existing qualified records to push them in batch.
+                </p>
+                <button
+                  type="button"
+                  onClick={downloadCsvTemplate}
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-zinc-800 border border-zinc-700 rounded-lg text-sm font-medium hover:bg-zinc-700 transition-colors"
+                >
+                  Download CSV Template
+                </button>
+                <h2 className="text-xl font-bold text-yellow-500">
+                  • If you apply for SPIFFs, you will automatically be entered into the sweepstakes and do not need to re-enter.
+                </h2>
+              </div>
 
               <div className="p-6 space-y-6">
+                {/* ── CHANGE 8: Model Number added to Expected CSV Columns list ── */}
                 <div className="bg-zinc-800/50 border border-zinc-700 rounded-lg p-4">
                   <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider mb-3">
                     Expected CSV Columns
@@ -1031,6 +1064,7 @@ export default function App() {
                       'Salesperson Name',
                       'Email',
                       'Brand',
+                      'Model Number',
                       'Date Sold',
                       'Serial Number',
                     ].map((col) => (
@@ -1040,8 +1074,8 @@ export default function App() {
                     ))}
                   </div>
                   <p className="text-xs text-zinc-500 mt-3">
-                    Column headers are matched flexibly — "Salesperson Name", "salesperson", or
-                    "Rep" all work.
+                    Column headers are matched flexibly — "Model Number", "model", or
+                    "model#" all work.
                   </p>
                 </div>
 
@@ -1328,7 +1362,7 @@ export default function App() {
                 <li>• If you apply for SPIFFs, you will automatically be entered into the sweepstakes.</li>
                 <li>• The same contestant can win the championship ring & belt but will be removed from the drawing.</li>
                 <li>• Only dealers who are qualified with 5+ Vanguard unit sales will be entered into the sweepstakes.</li>
-                <li>• You can only win once in the drawing. No Repeat Winnerss. </li>
+                <li>• You can only win once in the drawing. No Repeat Winners.</li>
               </ul>
             </Card>
           </div>
