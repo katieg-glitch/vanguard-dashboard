@@ -4,9 +4,9 @@ export default async function handler(req, res) {
   }
 
   try {
-const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
-const BASE_ID = process.env.AIRTABLE_BASE_ID
-const TABLE_ID = process.env.AIRTABLE_TABLE_ID
+    const AIRTABLE_API_KEY = process.env.AIRTABLE_API_KEY
+    const BASE_ID = process.env.AIRTABLE_BASE_ID
+    const TABLE_ID = process.env.AIRTABLE_TABLE_ID
 
     if (!AIRTABLE_API_KEY || !BASE_ID || !TABLE_ID) {
       return res.status(500).json({
@@ -21,6 +21,7 @@ const TABLE_ID = process.env.AIRTABLE_TABLE_ID
       email,
       brand,
       serialNumber,
+      modelNumber,   // ← ADDED
       dateSold,
     } = req.body || {}
 
@@ -39,13 +40,14 @@ const TABLE_ID = process.env.AIRTABLE_TABLE_ID
 
     const airtableBody = {
       fields: {
-        'Dealer #': dealerNumber || '',
-        'Dealer Name': dealerName || '',
-        'Salesperson Name': salespersonName || '',
-        'Email': email || '',
-        'Brand': brand || '',
-        'Date Sold': dateSold || '',
-        'Serial #': serialNumber || '',
+        'Dealer #':          dealerNumber || '',
+        'Dealer Name':       dealerName || '',
+        'Salesperson Name':  salespersonName || '',
+        'Email':             email || '',
+        'Brand':             brand || '',
+        'Model Number':      modelNumber || '',   // ← ADDED
+        'Date Sold':         dateSold || '',
+        'Serial #':          serialNumber || '',
         'Submission Source': 'App',
       },
       typecast: true,
