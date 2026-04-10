@@ -34,26 +34,30 @@ function aggregateScoreboard(records) {
 
     const displayName = String(
       fields['Contest Salesperson Name'] ||
-        fields['Salesperson Name'] ||
-        ''
+      fields['Salesperson Name'] ||
+      ''
     ).trim()
 
     const dealer = String(fields['Dealer Name'] || '').trim()
 
-    const brand = normalizeBrand(
-      fields['Contest Brand'] ||
-        fields['Brand'] ||
-        ''
-    )
+    // If you have Dealer # in Airtable, grab it too (recommended)
+    const dealerNumber = String(
+      fields['Dealer #'] || fields['Dealer Number'] || fields['Dealer#'] || ''
+    ).trim()
+
+    // Brand may come from either field
+    const brand = normalizeBrand(fields['Contest Brand'] || fields['Brand'] || '')
 
     if (!displayName) return
 
-    const key = displayName.toLowerCase()
+    // ✅ KEY FIX: include dealer (and dealerNumber if you have it)
+    const key = `${displayName.toLowerCase()}|${(dealerNumber || dealer).toLowerCase()}`
 
     if (!map[key]) {
       map[key] = {
         salesperson: displayName,
-        dealer,
+        dealer: dealer || dealerNumber || '',
+        dealerNumber: dealerNumber || '',
         ferris: 0,
         scag: 0,
         wright: 0,
@@ -61,13 +65,9 @@ function aggregateScoreboard(records) {
       }
     }
 
-    if (brand === 'ferris') {
-      map[key].ferris += 1
-    } else if (brand === 'scag') {
-      map[key].scag += 1
-    } else if (brand === 'wright') {
-      map[key].wright += 1
-    }
+    if (brand === 'ferris') map[key].ferris += 1
+    else if (brand === 'scag') map[key].scag += 1
+    else if (brand === 'wright') map[key].wright += 1
 
     map[key].total = map[key].ferris + map[key].scag + map[key].wright
   })
@@ -77,6 +77,7 @@ function aggregateScoreboard(records) {
     return a.salesperson.localeCompare(b.salesperson)
   })
 }
+
 
 function parseCSV(text) {
   const lines = text.split('\n').map((l) => l.trim()).filter(Boolean)
