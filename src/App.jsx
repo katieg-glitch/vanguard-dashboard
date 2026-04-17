@@ -19,7 +19,6 @@ import championshipBelt from '../Belt.png'
 
 const BRANDS = ['Ferris', 'Scag', 'Wright']
 
-// ✅ FIX: normalize Brand values like "Scag Midwest" / "Scag West & CA" => "scag"
 function normalizeBrand(raw) {
   if (Array.isArray(raw)) raw = raw[0] || ''
 
@@ -35,7 +34,6 @@ function normalizeBrand(raw) {
   return s
 }
 
-// ✅ FIX: ignore records where salesperson name is "." (placeholder in your Airtable export)
 function aggregateScoreboard(records) {
   const map = {}
 
@@ -47,7 +45,6 @@ function aggregateScoreboard(records) {
   records.forEach((r) => {
     const fields = r.fields || {}
 
-    // Prefer full name first, then fallback
     const fullName = String(fields['Salesperson Name'] || '').trim()
     const contestName = String(fields['Contest Salesperson Name'] || '').trim()
     const displayName = fullName || contestName
@@ -55,8 +52,6 @@ function aggregateScoreboard(records) {
     if (!displayName || isDotPlaceholder(displayName)) return
 
     const dealer = String(fields['Dealer Name'] || '').trim()
-
-    // Prefer Contest Brand if present, else Brand
     const brand = normalizeBrand(fields['Contest Brand'] || fields['Brand'] || '')
 
     if (!map[displayName.toLowerCase()]) {
@@ -257,7 +252,6 @@ export default function App() {
     salesperson: '',
     email: '',
     brand: '',
-    // ✅ Model Number included
     entries: [{ dateSold: '', serialNumber: '', modelNumber: '' }],
   })
 
@@ -328,7 +322,6 @@ export default function App() {
     }))
   }
 
-  // ✅ FIX: computed property key prevents overwriting
   const updateEntry = (i, field, val) => {
     setFormData((p) => {
       const e = [...p.entries]
@@ -405,7 +398,6 @@ export default function App() {
     reader.readAsText(file)
   }
 
-  // ✅ CSV template includes Model Number
   const downloadCsvTemplate = () => {
     const headers = [
       'Dealer #',
@@ -515,8 +507,6 @@ export default function App() {
       <div className="fixed inset-0 bg-[radial-gradient(circle_at_bottom_left,rgba(234,179,8,0.04),transparent_50%)] pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 md:px-8">
-
-        {/* ── HEADER ── */}
         <header className="pt-8 pb-6 text-center">
           <div className="flex justify-center mb-4">
             <img
@@ -544,7 +534,6 @@ export default function App() {
           )}
         </header>
 
-        {/* ── NAV ── */}
         <nav className="flex justify-center gap-2 mb-8 flex-wrap">
           <TabButton
             active={tab === 'scoreboard'}
@@ -576,7 +565,6 @@ export default function App() {
           </TabButton>
         </nav>
 
-        {/* ── SCOREBOARD TAB ── */}
         {tab === 'scoreboard' && (
           <div className="space-y-8 animate-fade-up pb-12">
             <PrizeShowcase
@@ -627,7 +615,6 @@ export default function App() {
               </div>
             )}
 
-            {/* Overall Top 3 */}
             <Card>
               <div className="p-6 border-b border-zinc-800">
                 <h2 className="text-lg font-bold flex items-center gap-2">
@@ -670,9 +657,7 @@ export default function App() {
               </div>
             </Card>
 
-            {/* Per-Brand Top 10s */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Ferris */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -719,7 +704,6 @@ export default function App() {
                 </div>
               </Card>
 
-              {/* Wright */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -766,7 +750,6 @@ export default function App() {
                 </div>
               </Card>
 
-              {/* Scag */}
               <Card>
                 <div className="p-5 border-b border-zinc-800">
                   <h3 className="font-bold flex items-center gap-2">
@@ -820,7 +803,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── REGISTER TAB ── */}
         {tab === 'register' && (
           <div className="max-w-2xl mx-auto animate-fade-up pb-12">
             {submitted ? (
@@ -945,7 +927,6 @@ export default function App() {
                     <div className="space-y-3">
                       {formData.entries.map((entry, i) => (
                         <div key={i} className="space-y-2">
-                          {/* Row 1: Date Sold + Model Number */}
                           <div className="flex gap-3 items-end">
                             <div className="flex-1">
                               {i === 0 && (
@@ -978,7 +959,6 @@ export default function App() {
                             </div>
                           </div>
 
-                          {/* Row 2: Serial Number + Delete */}
                           <div className="flex gap-3 items-end">
                             <div className="flex-[2]">
                               {i === 0 && (
@@ -1051,7 +1031,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── UPLOAD TAB ── */}
         {tab === 'upload' && (
           <div className="max-w-2xl mx-auto animate-fade-up pb-12">
             <Card>
@@ -1200,34 +1179,8 @@ export default function App() {
           </div>
         )}
 
-        {/* ── PRIZES TAB ── */}
         {tab === 'prizes' && (
           <div className="space-y-6 animate-fade-up pb-12">
-            <div className="flex justify-center">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center max-w-2xl w-full">
-                <div className="flex justify-center md:justify-end">
-                  <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-                    <img
-                      src={championshipRing}
-                      alt="Vanguard Championship Ring"
-                      className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                    />
-                  </div>
-                </div>
-                <div className="flex justify-center md:justify-start">
-                  <div className="relative rounded-3xl border border-yellow-500/20 bg-gradient-to-br from-zinc-950 via-zinc-900 to-black p-4 md:p-5 shadow-[0_0_40px_rgba(234,179,8,0.08)]">
-                    <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(234,179,8,0.12),transparent_65%)] pointer-events-none rounded-3xl" />
-                    <img
-                      src={championshipBelt}
-                      alt="Vanguard Championship Belt"
-                      className="relative max-h-[150px] md:max-h-[180px] w-auto object-contain drop-shadow-[0_10px_30px_rgba(0,0,0,0.45)]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="text-center py-8">
               <div className="text-sm font-semibold text-zinc-500 uppercase tracking-wider mb-2">
                 Total Rewards
@@ -1236,6 +1189,175 @@ export default function App() {
                 $30,000
               </div>
             </div>
+
+            <div>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2">
+                <Trophy className="w-5 h-5 text-yellow-500" />
+                Sweepstakes Raffle — Per Brand
+              </h3>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {BRANDS.map((brand) => (
+                  <Card key={brand} className="text-center p-6">
+                    <div className="text-lg font-bold mb-1">{brand}</div>
+                    <div className="text-3xl font-black text-yellow-500">$7,500</div>
+                    <div className="text-sm text-zinc-400 mt-2">10 winners × $750 each</div>
+                    <div className="text-xs text-zinc-500">Live raffle drawing</div>
+                  </Card>
+                ))}
+              </div>
+            </div>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
+                <Star className="w-5 h-5 text-yellow-500" fill="currentColor" />
+                Brand Champion Awards
+              </h3>
+              <p className="text-sm text-zinc-500 mb-5">
+                Top sales rep per brand at year end — 3 winners total
+              </p>
+
+              <div className="flex flex-wrap gap-6">
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center text-xl">
+                    💰
+                  </div>
+                  <div>
+                    <div className="text-xl font-black text-yellow-500">$1,500</div>
+                    <div className="text-xs text-zinc-500">Cash per winner</div>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-zinc-700 to-zinc-900 flex items-center justify-center text-xl">
+                    🏆
+                  </div>
+                  <div>
+                    <div className="text-sm font-bold text-white">Commemorative Award</div>
+                    <div className="text-xs text-zinc-500">Plaque or Championship Ring</div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="overflow-hidden border-yellow-500/20 bg-gradient-to-br from-yellow-500/5 via-zinc-950 to-black">
+              <div className="p-6 md:p-8">
+                <div className="inline-flex items-center gap-2 rounded-full border border-yellow-500/20 bg-yellow-500/10 px-3 py-1.5 mb-4">
+                  <Crown className="w-4 h-4 text-yellow-500" />
+                  <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-yellow-500">
+                    Grand Prize
+                  </span>
+                </div>
+
+                <h3 className="text-2xl md:text-3xl font-black text-yellow-500 mb-1">
+                  2026 Pace Vanguard Power Champion
+                </h3>
+                <p className="text-sm text-yellow-200/50 mb-6">
+                  Highest total Vanguard unit sales across all brands
+                </p>
+
+                <div className="flex flex-wrap gap-6 mb-8">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">💵</span>
+                    <div>
+                      <div className="font-black text-yellow-500">$3,000</div>
+                      <div className="text-xs text-zinc-500">Cash Award</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">🥊</span>
+                    <div>
+                      <div className="font-black text-yellow-500">Exclusive</div>
+                      <div className="text-xs text-zinc-500">Custom Championship Belt</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">👑</span>
+                    <div>
+                      <div className="font-black text-yellow-500">Power Champion</div>
+                      <div className="text-xs text-zinc-500">Official Title</div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-zinc-800 pt-8">
+                  <div className="text-center mb-5">
+                    <div className="text-xs font-semibold text-zinc-500 uppercase tracking-[0.2em] mb-2">
+                      Top Sales Prizes
+                    </div>
+                    <h2 className="text-2xl md:text-3xl font-black bg-gradient-to-r from-white via-yellow-400 to-yellow-600 bg-clip-text text-transparent">
+                      Championship Ring + Belt
+                    </h2>
+                    <p className="text-sm text-zinc-400 mt-2">
+                      Earn your place on the board and compete for the year-end title.
+                    </p>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 flex justify-center">
+                      <img
+                        src={championshipRing}
+                        alt="Championship ring prize"
+                        className="w-full max-w-sm h-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
+                      />
+                    </div>
+
+                    <div className="rounded-2xl border border-zinc-800 bg-zinc-900/60 p-4 flex justify-center">
+                      <img
+                        src={championshipBelt}
+                        alt="Championship belt prize"
+                        className="w-full max-w-sm h-auto object-contain drop-shadow-[0_0_30px_rgba(234,179,8,0.18)]"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <h3 className="text-lg font-bold mb-5">How It Works</h3>
+
+              <div className="grid gap-4">
+                {[
+                  {
+                    step: '01',
+                    title: 'Sell 5+ Vanguard-powered units',
+                    desc: 'Any combo of Ferris, Scag, and Wright mowers qualifies you.',
+                  },
+                  {
+                    step: '02',
+                    title: 'Every unit = 1 entry',
+                    desc: 'No cap. More sales, better odds.',
+                  },
+                  {
+                    step: '03',
+                    title: 'Submit via this portal',
+                    desc: 'Enter serial numbers and sale dates. Each record is tracked separately.',
+                  },
+                  {
+                    step: '04',
+                    title: 'Win in the live raffle',
+                    desc: '10 winners per brand at $750 each. Brand Champions and Overall Champion named at year end.',
+                  },
+                ].map((s, i) => (
+                  <div
+                    key={i}
+                    className="flex gap-4 items-start rounded-2xl border border-zinc-800 bg-zinc-950/60 p-5"
+                  >
+                    <div className="min-w-11 h-11 rounded-xl border border-yellow-500/15 bg-yellow-500/10 flex items-center justify-center text-sm font-black text-yellow-500">
+                      {s.step}
+                    </div>
+
+                    <div>
+                      <h4 className="text-base font-semibold mb-1">{s.title}</h4>
+                      <p className="text-sm text-zinc-400">{s.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
 
             <Card className="p-6">
               <h3 className="text-lg font-bold mb-4">Program Notes</h3>
@@ -1252,7 +1374,6 @@ export default function App() {
           </div>
         )}
 
-        {/* ── FOOTER ── */}
         <footer className="py-10 border-t border-zinc-900 text-center">
           <div className="flex justify-center mb-4">
             <img
@@ -1265,7 +1386,6 @@ export default function App() {
             Powered by Pace. Vanguard Sweepstakes Portal.
           </p>
         </footer>
-
       </div>
     </div>
   )
