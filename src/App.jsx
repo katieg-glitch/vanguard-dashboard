@@ -34,6 +34,18 @@ function normalizeBrand(raw) {
   return s
 }
 
+function formatLeaderboardName(name) {
+  const parts = String(name || '').trim().split(/\s+/).filter(Boolean)
+
+  if (!parts.length) return ''
+  if (parts.length === 1) return parts[0]
+
+  const firstName = parts[0]
+  const lastInitial = parts[parts.length - 1].charAt(0).toUpperCase()
+
+  return `${firstName} ${lastInitial}.`
+}
+
 function aggregateScoreboard(records) {
   const map = {}
 
@@ -47,15 +59,16 @@ function aggregateScoreboard(records) {
 
     const fullName = String(fields['Salesperson Name'] || '').trim()
     const contestName = String(fields['Contest Salesperson Name'] || '').trim()
-    const displayName = fullName || contestName
+    const rawName = fullName || contestName
+    const displayName = formatLeaderboardName(rawName)
 
-    if (!displayName || isDotPlaceholder(displayName)) return
+    if (!rawName || isDotPlaceholder(rawName)) return
 
     const dealer = String(fields['Dealer Name'] || '').trim()
     const brand = normalizeBrand(fields['Contest Brand'] || fields['Brand'] || '')
 
-    if (!map[displayName.toLowerCase()]) {
-      map[displayName.toLowerCase()] = {
+    if (!map[rawName.toLowerCase()]) {
+      map[rawName.toLowerCase()] = {
         salesperson: displayName,
         dealer,
         ferris: 0,
@@ -66,17 +79,17 @@ function aggregateScoreboard(records) {
     }
 
     if (brand === 'ferris') {
-      map[displayName.toLowerCase()].ferris += 1
+      map[rawName.toLowerCase()].ferris += 1
     } else if (brand === 'scag') {
-      map[displayName.toLowerCase()].scag += 1
+      map[rawName.toLowerCase()].scag += 1
     } else if (brand === 'wright') {
-      map[displayName.toLowerCase()].wright += 1
+      map[rawName.toLowerCase()].wright += 1
     }
 
-    map[displayName.toLowerCase()].total =
-      map[displayName.toLowerCase()].ferris +
-      map[displayName.toLowerCase()].scag +
-      map[displayName.toLowerCase()].wright
+    map[rawName.toLowerCase()].total =
+      map[rawName.toLowerCase()].ferris +
+      map[rawName.toLowerCase()].scag +
+      map[rawName.toLowerCase()].wright
   })
 
   return Object.values(map).sort((a, b) => {
