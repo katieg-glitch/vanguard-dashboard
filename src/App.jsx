@@ -300,22 +300,31 @@ export default function App() {
         if (Array.isArray(records) && records.length > 0) {
           const aggregated = aggregateScoreboard(records)
 
-          // TEMP DEBUG: log each salesperson's display name + total entries.
-          // Look for duplicate names (e.g. two "Alex A." rows) — that would mean
-          // some of Alex's records are being keyed/grouped separately instead of
-          // combined into one row, which would explain an incorrect Overall Top 3.
-          // Remove this console.log once the ranking is confirmed correct.
-          console.log(
-            'Scoreboard debug (name -> total):',
-            aggregated.map((r) => ({
-              name: r.salesperson,
-              total: r.total,
-              ferris: r.ferris,
-              scag: r.scag,
-              wright: r.wright,
-              dealer: r.dealer,
+          // ===================== TEMP DEBUG (safe to delete later) =====================
+          // Prints ONLY the rows we're investigating (Mason, Ray H., Alex A.) as a
+          // clean table in the console — no need to type anything into DevTools.
+          // If you see MORE THAN ONE ROW for the same person (e.g. two separate
+          // "Alex A." rows, each with a smaller total), that means his entries are
+          // being split into different scoreboard rows instead of combined into one,
+          // which would explain why his Overall Top 3 ranking looks wrong.
+          const debugNamesToWatch = ['mason', 'ray h', 'alex a']
+          const debugFiltered = aggregated
+            .filter((row) =>
+              debugNamesToWatch.some((n) =>
+                String(row.salesperson || '').toLowerCase().includes(n)
+              )
+            )
+            .map((row) => ({
+              name: row.salesperson,
+              total: row.total,
+              ferris: row.ferris,
+              scag: row.scag,
+              wright: row.wright,
+              dealer: row.dealer,
             }))
-          )
+          console.log('%c[DEBUG] Mason / Ray H. / Alex A. scoreboard rows:', 'font-weight:bold;color:#facc15;')
+          console.table(debugFiltered)
+          // =================== END TEMP DEBUG ===================
 
           setScoreboard(aggregated)
         } else {
