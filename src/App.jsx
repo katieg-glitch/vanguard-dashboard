@@ -299,6 +299,24 @@ export default function App() {
         const records = result.airtableData?.records
         if (Array.isArray(records) && records.length > 0) {
           const aggregated = aggregateScoreboard(records)
+
+          // TEMP DEBUG: log each salesperson's display name + total entries.
+          // Look for duplicate names (e.g. two "Alex A." rows) — that would mean
+          // some of Alex's records are being keyed/grouped separately instead of
+          // combined into one row, which would explain an incorrect Overall Top 3.
+          // Remove this console.log once the ranking is confirmed correct.
+          console.log(
+            'Scoreboard debug (name -> total):',
+            aggregated.map((r) => ({
+              name: r.salesperson,
+              total: r.total,
+              ferris: r.ferris,
+              scag: r.scag,
+              wright: r.wright,
+              dealer: r.dealer,
+            }))
+          )
+
           setScoreboard(aggregated)
         } else {
           setScoreboard([])
@@ -1403,3 +1421,4 @@ export default function App() {
     </div>
   )
 }
+
