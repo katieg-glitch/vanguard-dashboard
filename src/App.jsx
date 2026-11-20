@@ -607,6 +607,15 @@ export default function App() {
 
         {tab === 'scoreboard' && (
           <div className="space-y-8 animate-fade-up pb-12">
+            <div role="status" className="flex items-start gap-3 rounded-xl border border-yellow-500/30 bg-yellow-500/10 px-5 py-4 text-left">
+              <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" aria-hidden="true" />
+              <div>
+                <h2 className="font-bold text-yellow-400">Leaderboard Maintenance Notice</h2>
+                <p className="mt-1 text-sm leading-relaxed text-zinc-200">
+                  We're currently performing updates to the leaderboard. Rankings and point totals may change throughout the day as adjustments are made. Thank you for your patience!
+                </p>
+              </div>
+            </div>
             <PrizeShowcase
               title="Championship Ring + Belt"
               subtitle="Compete for the year-end title."
